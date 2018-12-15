@@ -1,5 +1,6 @@
 var db = require('../fn/mysql-db');
 var md5 = require('crypto-md5');
+var dateTime = require('node-datetime');
 
 exports.createAccount = acc => {
     var md5_pwd = md5(acc.passWord);
@@ -7,10 +8,12 @@ exports.createAccount = acc => {
     return db.load(sql);
 }
 exports.createPaymentAccount = acc => {
-    var sql = `insert into paymentAccount(userId, balance) values(${acc.userId},${acc.balance})`;
+    var dt = dateTime.create();
+    var accNum = dt.format('YmdHMSN');
+    var sql = `insert into paymentAccount(accountNumber,userId, balance) values('${accNum}',${acc.userId},${acc.balance})`;
     return db.load(sql);
 }
 exports.addBalance = acc => {
-    var sql = `update paymentAccount set balance = ${ acc.plus} where paymentAccount.id = ${acc.id})`;
+    var sql = `update paymentAccount set paymentAccount.balance = paymentAccount.balance + ${acc.plus} where accountNumber = '${acc.accountNumber}'`;
     return db.load(sql);
 }
