@@ -37,7 +37,7 @@ router.post("/addbalance",(req,res)=>{
   })
   .catch(err => {
     console.log("err when add balance");
-    res.json("err when add balance");
+    res.json(err);
   });
 })
 module.exports = router;
