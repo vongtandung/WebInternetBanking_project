@@ -11,12 +11,19 @@ router.post("/getpaymentaccount", (req, res) => {
     .getPaymentAccountById(req.body.userId)
     .then(row => {
       if (row.length > 0) {
-        res.json(row);
-      } else res.json("haven't payment account");
+        res.json({ "return code": 1, data: row });
+      } else
+        res.json({
+          "return mess": "haven't payment account",
+          "return code": -1
+        });
     })
     .catch(err => {
       console.log(err);
-      res.json("can't load payment account");
+      res.json({
+        "return mess": "can't load payment account",
+        "return code": -1
+      });
     });
 });
 router.post("/getinfobyaccountNumber", (req, res) => {
@@ -24,48 +31,110 @@ router.post("/getinfobyaccountNumber", (req, res) => {
     .getInfoByAccountNumber(req.body.accountNumber)
     .then(row => {
       if (row.length > 0) {
-        res.json(row);
+        res.json({ "return code": 1, data: row });
       } else {
-        res.json("This account Number is not available");
+        res.json({
+          "return mess": "This account Number is not available",
+          "return code": -1
+        });
       }
     })
     .catch(err => {
       console.log(err);
-      res.json("fail");
+      res.json({
+        "return mess": "error",
+        "return code": -1
+      });
     });
 });
 router.post("/transfer", (req, res) => {
   bankingRepo
-    .subtractBalance(req.body.amount, req.body.sendAccount)
+    .getBalance(req.body.sendAccount)
     .then(row => {
-      bankingRepo
-        .addBalance(req.body.amount, req.body.reciveAccount)
-        .then(
-          bankingRepo
-            .addTransHistory(req.body)
-            .then(res.json("Success"))
-            .catch(err => {
-              console.log(err);
-              res.json("trans fail");
-            })
-        )
-        .catch(err => {
-          console.log(err);
-          bankingRepo
-            .addBalance(req.body.amount, req.body.sendAccount)
-            .then(res.json("trans fail"));
-        });
+      if (row[0].balance > req.body.amount) {
+        bankingRepo
+          .subtractBalance(
+            req.body.amount,
+            req.body.sendAccount,
+            row[0].balance
+          )
+          .then(row => {
+            if (row.length > 0) {
+              bankingRepo
+                .addBalance(req.body.amount, req.body.reciveAccout)
+                .then(row => {
+                  if (row.length > 0) {
+                    bankingRepo
+                      .addTransHistory(req.body)
+                      .then(
+                        res.json({
+                          "return code": "1",
+                          "return mess": "trans success"
+                        })
+                      )
+                      .catch(err => {
+                        console.log(err);
+                        res.end(
+                          res.json({
+                            "return code": "-1",
+                            "return mess": "trans fail"
+                          })
+                        );
+                        // revert balance
+                      });
+                  } else {
+                    console.log(err);
+                    res.end(
+                      res.json({
+                        "return code": "-1",
+                        "return mess": "trans fail"
+                      })
+                    );
+                    // revert balance
+                  }
+                })
+                .catch(err => {
+                  console.log(err);
+                  res.end(
+                    res.json({
+                      "return code": "-1",
+                      "return mess": "trans fail"
+                    })
+                  );
+                  // revert balance
+                });
+            } else {
+              res.end(
+                res.json({ "return code": "-1", "return mess": "trans fail" })
+              );
+            }
+          })
+          .catch(err => {
+            console.log(err);
+            res.end(
+              res.json({ "return code": "-1", "return mess": "trans fail" })
+            );
+          });
+      } else {
+        res.end(
+          res.json({ "return code": "-1", "return mess": "no enough money" })
+        );
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      res.end(res.json({ "return code": "-1", "return mess": "trans fail" }));
     });
 });
 router.post("/gettranshistory", (req, res) => {
   bankingRepo
     .getTransHistory(req.body.accountNumber)
     .then(row => {
-      res.json(row);
+      res.json({ "return code": 1, data: row });
     })
     .catch(err => {
       console.log(err);
-      res.json("can't load history");
+      res.json({ "return code": -1, "return mess": "can't load history" });
     });
 });
 router.post("/deletepaymentaccount", (req, res) => {
@@ -75,19 +144,25 @@ router.post("/deletepaymentaccount", (req, res) => {
         if (balance[0].balance <= 0) {
           bankingRepo
             .deletePaymentAccount(req.body.accountNumber)
-            .then(res.json("delete succes"))
+            .then(
+              res.json({ "return code": 1, "return mess": "delete success" })
+            )
             .catch(err => {
               console.log(err);
-              res.json("delete fail");
+              res.json({ "return code": -1, "return mess": "delete fail" });
             });
-        }
-        else{
-          res.json("balance more than 0");
+        } else {
+          res.json({
+            "return mess": "Balnace is more than 0",
+            "return code": "-1"
+          });
         }
       });
-    }
-    else{
-      res.json("must have more than 0 account");
+    } else {
+      res.json({
+        "return mess": "account have less than 1 payment account",
+        "return code": "-1"
+      });
     }
   });
 });

@@ -9,10 +9,10 @@ var router = express.Router();
 router.post("/createaccount", (req, res) => {
   employeeRepo
     .createAccount(req.body)
-    .then(res.json("Create Success"))
+    .then(res.json({"return code":1,"return mess": "create success"}))
     .catch(err => {
       console.log("err when create new account");
-      res.end(err);
+      res.json({"return code":-1,"return mess": "cretae fail"})
     });
 });
 router.post("/createpaymentaccount", (req, res) => {
@@ -20,24 +20,24 @@ router.post("/createpaymentaccount", (req, res) => {
     .createPaymentAccount(req.body)
     .then(row => {
       if (row != null) {
-        res.json("Create Payment Account Success");
+        res.json({"return code":1,"return mess": "create success"});
       }
     })
     .catch(err => {
       console.log("err when create new account");
-      res.json("err when create new account");
+      res.json({"return code":-1,"return mess": "create fail"})
     });
 });
 router.post("/addbalance",(req,res)=>{
   employeeRepo.addBalance(req.body)
   .then(row => {
     if (row != null) {
-      res.json("add balance Success");
+      res.json({"return code":1,"return mess": "add balance success"});
     }
   })
   .catch(err => {
     console.log("err when add balance");
-    res.json(err);
+    res.json({"return code":-1,"return mess": "add balance fail"});
   });
 })
 module.exports = router;

@@ -9,12 +9,16 @@ exports.getInfoByAccountNumber = (accountNumber)=>{
     var sql = `select account.name, account.phone, account.email, paymentAccount.accountNumber from paymentAccount, account where paymentAccount.userId = account.id and paymentAccount.accountNumber =${accountNumber}`;
     return db.load(sql);
 }
+exports.getBalance =(accountNumber) =>{
+    var sql = `select paymentAccount.balance from paymentAccount where paymentAccount.accountNumber =${accountNumber}`;
+    return db.load(sql);
+}
 exports.addBalance = (plus,accountNumber) => {
     var sql = `update paymentAccount set paymentAccount.balance = paymentAccount.balance + ${plus} where accountNumber = '${accountNumber}'`;
     return db.load(sql);
 }
-exports.subtractBalance = (sub, accountNumber) => {
-    var sql = `update paymentAccount set paymentAccount.balance = paymentAccount.balance - ${sub} where accountNumber = '${accountNumber}'`;
+exports.subtractBalance = (sub, accountNumber, amount) => {
+    var sql = `update paymentAccount set paymentAccount.balance = paymentAccount.balance - ${sub} where accountNumber = '${accountNumber}' and balance = amount`;
     return db.load(sql);
 }
 exports.addTransHistory = (req) => {
@@ -39,4 +43,7 @@ exports.getBalance = (accountNumber) => {
 exports.deletePaymentAccount = (accountNumber)=> {
     var sql = `delete  from paymentAccount where accountNumber = ${accountNumber}`;
     return db.load(sql);
+}
+exports.transferTransction = (req) =>{
+
 }
