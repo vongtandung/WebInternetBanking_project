@@ -1,0 +1,64 @@
+.user-home{
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    overflow-y: auto;
+}
+
+.user-home:-webkit-scrollbar{
+    display: none;
+}
+
+.user-home-navigate{
+    display: flex;
+    width: 100%;
+    height: 100%;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.user-home-box{
+    width: 100%;
+    height: auto;
+    margin: 1em;
+    flex: 0;
+}
+
+.user-home-btn{
+    width: 200px;
+
+    height: auto;
+}
+
+
+
+/* Reponsive Css */
+@media only screen and (max-width: 640px) {
+    .user-home-box{
+        width: auto;
+        margin: 0.5em;
+
+    }
+
+    .user-home-btn{
+        width: 130px;
+        height: auto;
+    }
+}
+
+@media only screen and (max-width: 375px) {
+    .user-home-box{
+        width: auto;
+        margin: 0.5em;
+
+    }
+
+    .user-home-btn{
+        width: 100px;
+        height: auto;
+    }
+}

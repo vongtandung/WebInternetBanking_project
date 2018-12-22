@@ -1,0 +1,85 @@
+.user-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  background-color: #fff;
+  border-radius: 5px;
+  border: 1px solid black;
+  margin-bottom: 15px;
+}
+
+.user-box-container {
+  width: 100%;
+  height: calc(100vh - 9.5em);
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+/* Reponsive Box */
+@media only screen and (min-width: 1551px) {
+  .user-box-container {
+    max-width: 80em !important;
+  }
+}
+
+@media only screen and (min-width: 1400px) and (max-width: 1550px) {
+  .user-box-container {
+    max-width: 70em !important;
+  }
+}
+
+@media only screen and (min-width: 1251px) and (max-width: 1399px) {
+  .user-box-container {
+    max-width: 60em !important;
+  }
+}
+
+@media only screen and (min-width: 1200px) and (max-width: 1250px) {
+  .user-box-container {
+    max-width: 57em !important;
+  }
+}
+
+@media only screen and (min-width: 1110px) and (max-width: 1199px) {
+  .user-box-container {
+    max-width: 52em !important;
+  }
+}
+
+@media only screen and (min-width: 1024px) and (max-width: 1099px) {
+  .user-box-container {
+    max-width: 47em !important;
+  }
+}
+
+@media only screen and (min-width: 901px) and (max-width: 1023px) {
+  .user-box-container {
+    max-width: 38em !important;
+  }
+}
+
+@media only screen and (min-width: 800px) and (max-width: 900px) {
+  .user-box-container {
+    max-width: 35em !important;
+  }
+}
+
+@media only screen and (min-width: 641px) and (max-width: 799px) {
+  .user-box-container {
+    max-width: 30em !important;
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  .user {
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+  }
+  .user-box-container {
+    height: calc(100vh - 9.5em - 75px);
+    overflow-y: scroll;
+  }
+}
