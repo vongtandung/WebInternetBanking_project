@@ -12,8 +12,6 @@
 .user-box-container {
   width: 100%;
   height: calc(100vh - 9.5em);
-  padding-right: 15px;
-  padding-left: 15px;
   margin-right: auto;
   margin-left: auto;
 }

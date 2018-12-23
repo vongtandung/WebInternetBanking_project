@@ -32,9 +32,13 @@
 
 .navbar-info-symbol-logo {
   width: 4.5em;
-  height: 4.5em;
-  background-color: lightcoral;
 }
+
+.navbar-info-symbol-logo img {
+  width: 2.5em;
+  height: auto;
+}
+
 
 /* Title Navbar */
 .navbar-info-title {
@@ -251,7 +255,7 @@
     padding: 0;
   }
   .user-control {
-    justify-content: center;
+    justify-content: flex-end;
   }
   .user-control div {
     margin-left: 0.1em;
