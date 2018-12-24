@@ -9,110 +9,131 @@
   justify-content: center;
   align-self: flex-start;
   width: 100%;
-  background-image: url(../../../../assets/images/pic/banner-module.jpg);
-  background-repeat: no-repeat;
-  background-size: contain;
   height: 170px;
   border-top-right-radius: 5px;
   border-top-left-radius: 5px;
 }
 
-.user-send-body{
-    padding-right: 15px;
-    padding-left: 15px;
+.user-send-body {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+.user-send-footer {
+  margin-top: 0.5em;
+  margin-bottom: 1em;
 }
 
 .arrow-tag {
-    position: relative;
-    padding-top: 30px;
-
+  display: flex;
+  width: max-content;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding-top: 30px;
 }
 
 .arrow-tag img {
-    width: 250px;
-    height: auto;
-    float: left;
+  width: 250px;
+  height: auto;
+  float: left;
 }
 .arrow-tag .text {
-    position: absolute;
-    top: 40%;
-    left: 0;
+  position: absolute;
+  top: 40%;
 }
-.arrow-tag .text p{
-   text-transform: uppercase;
-   font-size: 18px;
-   margin: 12px 0 0 11px;
-   font-weight: bold;
-}
-
-.form-user-inf{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding:1.5em;
-    border-radius: 5px;
-    border: 2px solid black;
+.arrow-tag .text p {
+  text-transform: uppercase;
+  font-size: 18px;
+  margin-top: 12px;
+  font-weight: bold;
 }
 
-.form-block{
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    max-width: 500px;
+.form-user-inf {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5em;
+  border-radius: 5px;
+  border: 2px solid black;
 }
 
-.col-form-label-custom{
-    flex: 1;
+.form-block {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  max-width: 500px;
 }
 
-.col-form-input-custom{
-    width: 100%;
-    flex: 2;
+.col-form-label-custom {
+  flex: 1;
 }
 
-.col-form-input-readonly{
-    display: flex;
-    justify-self: flex-start;
+.col-form-input-custom {
+  width: 100%;
+  flex: 2;
+}
+
+.col-form-input-readonly {
+  display: flex;
+  justify-self: flex-start;
+}
+
+.btn-transfer {
+  background: -webkit-linear-gradient(
+    to right,
+    #ffcc33,
+    #ffb347
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to right,
+    #ffcc33,
+    #ffb347
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+  color: #fff;
+  font-weight: bold;
+  font-size: 1.5em;
 }
 
 @media only screen and (min-width: 641px) and (max-width: 1007px) {
-    h1 {
-        font-size: 1.8em;
-    }
+  h1 {
+    font-size: 1.8em;
+  }
 
-    .user-send-ico{
-        width: 3.5em;
-        height: auto;
-    }
-    
-    .user-send-header{
-        height: 130px;
-    }
+  .user-send-ico {
+    width: 3.5em;
+    height: auto;
+  }
 
-    .col-form-label-custom{
-        font-size: 1.1em;
-    }
+  .user-send-header {
+    height: 130px;
+  }
+
+  .col-form-label-custom {
+    font-size: 1.1em;
+  }
 }
 
 @media only screen and (max-width: 640px) {
-    h1 {
-        font-size: 1.5em;
-    }
-    
-    .user-send-ico{
-        width: 3em;
-        height: auto;
-    }
-    
-    .user-send-header{
-        height: 100px;
-    }
+  h1 {
+    font-size: 1.5em;
+  }
 
-    .form-block{
-        flex-direction: column;
-    }
+  .user-send-ico {
+    width: 3em;
+    height: auto;
+  }
+
+  .user-send-header {
+    height: 100px;
+  }
+
+  .form-block {
+    flex-direction: column;
+  }
 }

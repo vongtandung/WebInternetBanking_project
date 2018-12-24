@@ -3,6 +3,7 @@ import "./UserHome.css";
 import { NavLink, Route, Switch, Redirect } from "react-router-dom";
 import UserPaymentList from "./UserPaymentList";
 import UserSend from "./UserSend";
+import UserContact from "./UserContact";
 import acclistIco from "../../../assets/images/ico/home-watch-ico.png";
 import moneysendIco from "../../../assets/images/ico/home-send-ico.png";
 import accaddrIco from "../../../assets/images/ico/home-addr-ico.png";
@@ -24,7 +25,7 @@ class UserHome extends Component {
           <NavLink to="/user/home/send" className="user-home-box">
             <img src={moneysendIco} alt="" className="user-home-btn" />
           </NavLink>
-          <NavLink to="/user" className="user-home-box">
+          <NavLink to="/user/home/contact" className="user-home-box">
             <img src={accaddrIco} alt="" className="user-home-btn" />
           </NavLink>
         </div>
@@ -42,6 +43,13 @@ class UserHome extends Component {
               path="/user/home/send"
               render={props => (
                 <UserSend {...props} isRoute={this.handleRoute} />
+              )}
+            />
+            <Route
+              exact
+              path="/user/home/contact"
+              render={props => (
+                <UserContact {...props} isRoute={this.handleRoute} />
               )}
             />
             {this.state.isRoute === true ? (
