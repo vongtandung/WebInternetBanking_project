@@ -7,11 +7,13 @@
     "hover.css": "^2.3.2",
     "node-sass": "^4.11.0",
     "react": "^16.6.3",
+    "react-datepicker": "^2.0.0",
     "react-dom": "^16.6.3",
     "react-google-recaptcha": "^1.0.5",
     "react-router-dom": "^4.3.1",
     "react-scripts": "2.1.1",
-    "redux": "^4.0.1"
+    "redux": "^4.0.1",
+    "sweetalert2-react": "^0.7.2"
   },
   "scripts": {
     "start": "react-scripts start",

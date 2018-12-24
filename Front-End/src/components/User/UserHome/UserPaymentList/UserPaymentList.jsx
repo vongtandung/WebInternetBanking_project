@@ -17,7 +17,7 @@ class UserPaymentList extends Component {
     return (
       <div className="user-acc-payment">
         <div className="user-accpay-header">
-          <h1>Danh sách tài khoản</h1>
+          <h1>DANH SÁCH TÀI KHOẢN</h1>
           <div className="send-money-ico">
             <img src={accPayListIco} alt="" className="user-send-ico" />
           </div>
@@ -31,17 +31,17 @@ class UserPaymentList extends Component {
                   <p>Tài khoản nguồn</p>
                 </div>
               </div>
-              <div class="form-group form-user-inf">
+              <div className="form-group form-user-inf">
                 <div className="form-block">
                   <label
-                    for="accList"
+                    htmlFor="accList"
                     className="col-form-label col-form-label-lg col-form-label-custom "
                   >
                     Tài khoản nguồn
                   </label>
                   <div className="col-form-input-custom">
                     <select id="accList" className="form-control">
-                      <option selected>Choose...</option>
+                      <option defaultValue>Choose...</option>
                       <option>...</option>
                     </select>
                   </div>
@@ -55,10 +55,10 @@ class UserPaymentList extends Component {
                   <p>Thông tin tài khoản</p>
                 </div>
               </div>
-              <div class="form-group form-user-inf">
+              <div className="form-group form-user-inf">
                 <div className="form-block">
                   <label
-                    for="accPayName"
+                    htmlFor="accPayName"
                     className="col-form-label col-form-label-lg col-form-label-custom col-form-label-accpay-custom"
                   >
                     Tên tài khoản
@@ -71,7 +71,7 @@ class UserPaymentList extends Component {
                 </div>
                 <div className="form-block">
                   <label
-                    for="accPayId"
+                    htmlFor="accPayId"
                     className="col-form-label col-form-label-lg col-form-label-custom col-form-label-accpay-custom"
                   >
                     Số tài khoản
@@ -84,7 +84,7 @@ class UserPaymentList extends Component {
                 </div>
                 <div className="form-block">
                   <label
-                    for="accPayTotal"
+                    htmlFor="accPayTotal"
                     className="col-form-label col-form-label-lg col-form-label-custom col-form-label-accpay-custom"
                   >
                     Số dư hiện tại
@@ -97,7 +97,7 @@ class UserPaymentList extends Component {
                 </div>
                 <div className="form-block">
                   <label
-                    for="accPayActive"
+                    htmlFor="accPayActive"
                     className="col-form-label col-form-label-lg col-form-label-custom col-form-label-accpay-custom"
                   >
                     Số dư khả dụng

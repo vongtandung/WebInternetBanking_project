@@ -83,6 +83,10 @@
   justify-self: flex-start;
 }
 
+#accRevSave{
+  width: max-content;
+}
+
 .btn-transfer {
   background: -webkit-linear-gradient(
     to right,
@@ -135,5 +139,9 @@
 
   .form-block {
     flex-direction: column;
+  }
+
+  .col-form-input-readonly{
+    justify-content: center;
   }
 }

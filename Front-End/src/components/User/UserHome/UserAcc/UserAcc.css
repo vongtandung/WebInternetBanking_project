@@ -1,0 +1,21 @@
+.user-acc-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-start;
+  width: 100%;
+  height: 170px;
+  border-top-right-radius: 5px;
+  border-top-left-radius: 5px;
+}
+
+.user-acc-body {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+.warning {
+  color: red;
+  font-weight: bold;
+}

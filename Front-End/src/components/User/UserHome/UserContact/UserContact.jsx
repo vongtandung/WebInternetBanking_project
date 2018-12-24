@@ -16,7 +16,7 @@ class UserContact extends Component {
     return (
       <div className="user-acc-contact">
         <div className="user-contact-header">
-          <h1>Danh sách tài khoản</h1>
+          <h1>DANH SÁCH LIÊN HỆ</h1>
           <div className="send-money-ico">
             <img src={accContactIco} alt="" className="user-send-ico" />
           </div>
@@ -30,10 +30,10 @@ class UserContact extends Component {
                   <p>Thêm liên hệ</p>
                 </div>
               </div>
-              <div class="form-group form-user-inf">
+              <div className="form-group form-user-inf">
                 <div className="form-block">
                   <label
-                    for="accContactId"
+                    htmlFor="accContactId"
                     className="col-form-label col-form-label-lg col-form-label-custom "
                   >
                     Tài khoản liên hệ
@@ -41,7 +41,7 @@ class UserContact extends Component {
                   <div className="col-form-input-custom">
                     <input
                       type="text"
-                      class="form-control"
+                      className="form-control"
                       id="accContactId"
                       placeholder="Nhập số tài khoản liên hệ"
                     />
@@ -49,7 +49,7 @@ class UserContact extends Component {
                 </div>
                 <div className="form-block">
                   <label
-                    for="accContactName"
+                    htmlFor="accContactName"
                     className="col-form-label col-form-label-lg col-form-label-custom "
                   >
                     Tên gợi nhớ
@@ -57,7 +57,7 @@ class UserContact extends Component {
                   <div className="col-form-input-custom">
                     <input
                       type="text"
-                      class="form-control"
+                      className="form-control"
                       id="accContactName"
                       placeholder="Nhập tên gợi nhớ"
                     />
@@ -72,9 +72,9 @@ class UserContact extends Component {
                   <p>Danh sách liên hệ</p>
                 </div>
               </div>
-              <div class="form-group form-user-inf-contact">
-                  <div class="bd-example">
-                    <table class="table">
+              <div className="form-group form-user-inf-contact">
+                  <div className="bd-example">
+                    <table className="table">
                       <thead>
                         <tr className="contact-list-label">
                           <th scope="col">Tên tài khoản</th>

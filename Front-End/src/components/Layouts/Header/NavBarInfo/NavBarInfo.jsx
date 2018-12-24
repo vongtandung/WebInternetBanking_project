@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import "./NavBarInfo.css";
+import { NavLink } from "react-router-dom";
 import searchIco from "../../../../assets/images/ico/search-ico.png";
 import homeIco from "../../../../assets/images/ico/home-ico.png";
 import tradeIco from "../../../../assets/images/ico/trade-history-ico.png";
@@ -55,14 +56,18 @@ class NavBarInfo extends Component {
           </div>
         </div>
         <div className="navbar-header-reponsive">
+        <NavLink to="/user/home" className="nav-repo-home box-repo" activeClassName="menu-home-active-repon">
           <div className="nav-repo-home box-repo">
             <img src={homeIco} alt="" />
             <span>Trang chủ</span>
           </div>
+          </NavLink>
+          <NavLink to="/user/history" className="nav-repo-home box-repo" activeClassName="menu-trade-active-repon">
           <div className="nav-repo-trade box-repo">
             <img src={tradeIco} alt="" />
             <span>Giao dịch</span>
           </div>
+          </NavLink>
           <div className="nav-repo-profile box-repo">
             <img src={profileIco} alt="" />
             <span>Cá nhân</span>

@@ -8,7 +8,8 @@
   background-size: contain;
   background-color: #ffffff;
   border-radius: 5px;
-  border: 1px solid #e6ecf5;
+  /* border: 1px solid #e6ecf5; */
+  border: 1px solid black;
   margin-bottom: 15px;
 }
 

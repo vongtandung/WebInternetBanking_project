@@ -31,24 +31,24 @@ class UserSend extends Component {
                   <p>Thông tin người chuyển</p>
                 </div>
               </div>
-              <div class="form-group form-user-inf">
+              <div className="form-group form-user-inf">
                 <div className="form-block">
                   <label
-                    for="accList"
+                    htmlFor="accList"
                     className="col-form-label col-form-label-lg col-form-label-custom"
                   >
                     Tài khoản nguồn
                   </label>
                   <div className="col-form-input-custom">
                     <select id="accList" className="form-control">
-                      <option selected>Choose...</option>
+                      <option defaultValue>Choose...</option>
                       <option>...</option>
                     </select>
                   </div>
                 </div>
                 <div className="form-block">
                   <label
-                    for="accAmount"
+                    htmlFor="accAmount"
                     className="col-form-label col-form-label-lg col-form-label-custom"
                   >
                     Số dư khả dụng
@@ -68,24 +68,24 @@ class UserSend extends Component {
                   <p>Thông tin người hưởng</p>
                 </div>
               </div>
-              <div class="form-group form-user-inf">
+              <div className="form-group form-user-inf">
                 <div className="form-block">
                   <label
-                    for="accRevList"
+                    htmlFor="accRevList"
                     className="col-form-label col-form-label-lg col-form-label-custom"
                   >
                     Tìm kiếm
                   </label>
                   <div className="col-form-input-custom">
                     <select id="accRevList" className="form-control">
-                      <option selected>Choose...</option>
+                      <option defaultValue>Choose...</option>
                       <option>...</option>
                     </select>
                   </div>
                 </div>
                 <div className="form-block">
                   <label
-                    for="accRevId"
+                    htmlFor="accRevId"
                     className="col-form-label col-form-label-lg col-form-label-custom"
                   >
                     Số tài khoản
@@ -93,7 +93,7 @@ class UserSend extends Component {
                   <div className="col-form-input-custom col-form-input-readonly">
                     <input
                       type="text"
-                      class="form-control"
+                      className="form-control"
                       id="accRevId"
                       placeholder="Nhập số tài khoản"
                     />
@@ -101,7 +101,7 @@ class UserSend extends Component {
                 </div>
                 <div className="form-block">
                   <label
-                    for="accRevName"
+                    htmlFor="accRevName"
                     className="col-form-label col-form-label-lg col-form-label-custom"
                   >
                     Tên người hưởng
@@ -109,7 +109,7 @@ class UserSend extends Component {
                   <div className="col-form-input-custom col-form-input-readonly">
                     <input
                       type="text"
-                      class="form-control"
+                      className="form-control"
                       id="accRevName"
                       value=""
                       readOnly
@@ -118,7 +118,7 @@ class UserSend extends Component {
                 </div>
                 <div className="form-block">
                   <label
-                    for="accRevSave"
+                    htmlFor="accRevSave"
                     className="col-form-label col-form-label-lg col-form-label-custom"
                   >
                     Lưu người hưởng
@@ -126,7 +126,7 @@ class UserSend extends Component {
                   <div className="col-form-input-custom col-form-input-readonly">
                     <input
                       type="checkbox"
-                      class="form-control"
+                      className="form-control"
                       id="accRevSave"
                       value=""
                       readOnly
@@ -135,7 +135,7 @@ class UserSend extends Component {
                 </div>
                 <div className="form-block">
                   <label
-                    for="accRevNameSave"
+                    htmlFor="accRevNameSave"
                     className="col-form-label col-form-label-lg col-form-label-custom"
                   >
                     Nhập tên gợi nhớ
@@ -143,7 +143,7 @@ class UserSend extends Component {
                   <div className="col-form-input-custom col-form-input-readonly">
                     <input
                       type="text"
-                      class="form-control"
+                      className="form-control"
                       id="accRevNameSave"
                       value=""
                       readOnly
@@ -158,10 +158,10 @@ class UserSend extends Component {
                     <p>Thông tin giao dịch</p>
                   </div>
                 </div>
-                <div class="form-group form-user-inf">
+                <div className="form-group form-user-inf">
                   <div className="form-block">
                     <label
-                      for="accMoneySend"
+                      htmlFor="accMoneySend"
                       className="col-form-label col-form-label-lg col-form-label-custom"
                     >
                       Số tiền
@@ -169,14 +169,14 @@ class UserSend extends Component {
                     <div className="col-form-input-custom input-group">
                       <input
                         type="text"
-                        class="form-control"
+                        className="form-control"
                         id="accMoneySend"
                         placeholder="Nhập số tiền"
                         aria-describedby="inputGroupPrepend"
                         required
                       />
-                      <div class="input-group-prepend">
-                        <span class="input-group-text" id="accMoneySend">
+                      <div className="input-group-prepend">
+                        <span className="input-group-text" id="accMoneySend">
                           VNĐ
                         </span>
                       </div>
@@ -184,7 +184,7 @@ class UserSend extends Component {
                   </div>
                   <div className="form-block">
                     <label
-                      for="accInfoSend"
+                      htmlFor="accInfoSend"
                       className="col-form-label col-form-label-lg col-form-label-custom"
                     >
                       Nội dung chuyển
@@ -192,7 +192,7 @@ class UserSend extends Component {
                     <div className="col-form-input-custom col-form-input-readonly">
                       <input
                         type="text"
-                        class="form-control"
+                        className="form-control"
                         id="accInfoSend"
                         placeholder="Nhập nội dung"
                       />
@@ -200,14 +200,14 @@ class UserSend extends Component {
                   </div>
                   <div className="form-block">
                     <label
-                      for="accFeeSend"
+                      htmlFor="accFeeSend"
                       className="col-form-label col-form-label-lg col-form-label-custom"
                     >
                       Phí chuyển tiền
                     </label>
                     <div className="col-form-input-custom col-form-input-readonly">
                       <select id="accFeeSend" className="form-control">
-                        <option selected>Choose...</option>
+                        <option defaultValue>Choose...</option>
                         <option>...</option>
                       </select>
                     </div>
