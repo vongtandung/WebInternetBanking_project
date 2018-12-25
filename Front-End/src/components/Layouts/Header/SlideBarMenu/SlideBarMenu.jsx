@@ -9,7 +9,7 @@ class SlideBarMenu extends Component {
   render() {
     return (
       <div className="slidebar-menu">
-        <NavLink to="/user" activeClassName="menu-home-active">
+        <NavLink to="/user/home" activeClassName="menu-home-active">
           <div className="menu-home">
             <div className="hvr-icon-grow">
               <img src={homeIco} alt="Home" className="hvr-icon" />
@@ -17,7 +17,7 @@ class SlideBarMenu extends Component {
             </div>
           </div>
         </NavLink>
-        <NavLink to="/ddd" activeClassName="menu-trade-active">
+        <NavLink to="/user/history" activeClassName="menu-trade-active">
         <div className="menu-trade">
           <div className="hvr-icon-grow">
             <img src={tradeIco} alt="Trade" className="hvr-icon" />

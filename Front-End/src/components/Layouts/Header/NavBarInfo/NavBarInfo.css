@@ -32,8 +32,11 @@
 
 .navbar-info-symbol-logo {
   width: 4.5em;
-  height: 4.5em;
-  background-color: lightcoral;
+}
+
+.navbar-info-symbol-logo img {
+  width: 2.5em;
+  height: auto;
 }
 
 /* Title Navbar */
@@ -218,6 +221,16 @@
   display: none;
 }
 
+.navbar-header-reponsive a:-webkit-any-link {
+  text-decoration: none !important;
+}
+
+.menu-home-active-repon,
+.menu-trade-active-repon {
+  background: -webkit-linear-gradient(to right, #ffd200, #f7971e);
+  background: -webkit-linear-gradient(left, #ffd200, #f7971e);
+  background: linear-gradient(to right, #ffd200, #f7971e);
+}
 /* Reponsive css */
 @media only screen and (max-width: 1007px) and (min-width: 641px) {
   .navbar-info-title {
@@ -231,7 +244,6 @@
     width: 250px;
   }
 }
-
 @media only screen and (max-width: 640px) {
   .navbar-info {
     width: 100%;
@@ -251,7 +263,7 @@
     padding: 0;
   }
   .user-control {
-    justify-content: center;
+    justify-content: flex-end;
   }
   .user-control div {
     margin-left: 0.1em;
@@ -271,7 +283,6 @@
     width: 30px;
     margin-top: 0.5em;
   }
-
   /* Navbar Reponsive */
   .navbar-header-reponsive {
     display: flex;
@@ -283,6 +294,7 @@
     height: 75px;
     background-color: rgba(22, 30, 54, 0.747);
   }
+
   .box-repo {
     display: flex;
     flex-direction: column;
@@ -299,7 +311,6 @@
     filter: brightness(0) invert(1);
   }
 }
-
 @media only screen and (max-width: 350px) {
   .navbar-info-symbol {
     display: none;

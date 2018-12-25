@@ -1,11 +1,13 @@
-import React, { Component } from 'react';
-import './NavBarInfo.css';
-import searchIco from '../../../../assets/images/ico/search-ico.png';
-import homeIco from '../../../../assets/images/ico/home-ico.png';
-import tradeIco from '../../../../assets/images/ico/trade-history-ico.png';
-import profileIco from '../../../../assets/images/ico/profile-menu-ico.png';
-import notiIco from '../../../../assets/images/ico/notification-ico.png';
-import avatar from '../../../../assets/images/pic/avartar-sp.jpg';
+import React, { Component } from "react";
+import "./NavBarInfo.css";
+import { NavLink } from "react-router-dom";
+import searchIco from "../../../../assets/images/ico/search-ico.png";
+import homeIco from "../../../../assets/images/ico/home-ico.png";
+import tradeIco from "../../../../assets/images/ico/trade-history-ico.png";
+import profileIco from "../../../../assets/images/ico/profile-menu-ico.png";
+import notiIco from "../../../../assets/images/ico/notification-ico.png";
+import avatar from "../../../../assets/images/pic/avartar-sp.jpg";
+import logo from "../../../../assets/images/pic/bank-logo.png";
 
 class NavBarInfo extends Component {
   render() {
@@ -15,17 +17,23 @@ class NavBarInfo extends Component {
           <div className="navbar-info-left">
             <div className="navbar-info-symbol">
               <a href="/" className="navbar-info-symbol-logo">
-
+                <img src={logo} alt="" />
               </a>
             </div>
-            <div className="navbar-info-title">
-              Newsfeed
-          </div>
+            <div className="navbar-info-title">Newsfeed</div>
             <div className="navbar-info-search">
               <form method="post" className="navbar-search-form">
-                <input type="text" className="search-form-textbox" placeholder="Tìm kiếm ..." />
+                <input
+                  type="text"
+                  className="search-form-textbox"
+                  placeholder="Tìm kiếm ..."
+                />
                 <button type="button" className="search-form-button">
-                  <img src={searchIco} alt="" className="search-form-button-ico" />
+                  <img
+                    src={searchIco}
+                    alt=""
+                    className="search-form-button-ico"
+                  />
                 </button>
               </form>
             </div>
@@ -42,20 +50,24 @@ class NavBarInfo extends Component {
             <div className="user-inf">
               <div className="user-inf-img">
                 <img src={avatar} alt="" />
-                <span className="icon-status online"></span>
+                <span className="icon-status online" />
               </div>
             </div>
           </div>
         </div>
         <div className="navbar-header-reponsive">
+        <NavLink to="/user/home" className="nav-repo-home box-repo" activeClassName="menu-home-active-repon">
           <div className="nav-repo-home box-repo">
             <img src={homeIco} alt="" />
             <span>Trang chủ</span>
           </div>
+          </NavLink>
+          <NavLink to="/user/history" className="nav-repo-home box-repo" activeClassName="menu-trade-active-repon">
           <div className="nav-repo-trade box-repo">
             <img src={tradeIco} alt="" />
             <span>Giao dịch</span>
           </div>
+          </NavLink>
           <div className="nav-repo-profile box-repo">
             <img src={profileIco} alt="" />
             <span>Cá nhân</span>
@@ -63,7 +75,8 @@ class NavBarInfo extends Component {
         </div>
       </div>
     );
-  } c
+  }
+  c;
 }
 
 export default NavBarInfo;

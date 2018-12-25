@@ -1,76 +1,76 @@
 import React, { Component } from "react";
 import "./Login.css";
-import bg from "../../../assets/images/pic/img-01.png";
-import "./ResrcExtension/css/animate.css"
-import "./ResrcExtension/css/hamburgers.min.css";
-import "./ResrcExtension/css/select2.min.css";
-import "./ResrcExtension/css/util.css";
-import "./ResrcExtension/css/main.css";
+import SystemHelper from "../../../utilities/System.helper";
+import ReCAPTCHA from "react-google-recaptcha";
+import logo from "../../../assets/images/pic/bank-logo.png";
 
 class Login extends Component {
+  constructor() {
+    super()
+    this.state = {
+      recapValue: ""
+    }
+    this.helper = new SystemHelper()
+  }
+  componentWillMount = () => {
+    this.props.isLogged(true);
+  };
+  handleFormRecapcha = (value) =>{
+    this.setState({recapValue: value});
+  }
+  handleFormExpRecapcha = () =>{
+    this.setState({recapValue: ""});
+  }
+  handleFormLoginSubmit = (e) =>{
+    e.preventDefault();
+    const validate = this.helper.validateLogin(e.target.username.value, e.target.password.value, this.state.recapValue)
+    if (validate.isValid === false){
+    } else {
+
+    }
+  }
+
   render() {
     return (
-      <div classNameName="Login">
-        <div className="limiter">
-          <div className="container-login100">
-            <div className="wrap-login100">
-              <div className="login100-pic js-tilt" data-tilt>
-                <img src={bg} alt="IMG" />
-              </div>
-              <form className="login100-form validate-form">
-                <span className="login100-form-title">Member Login</span>
-                <div
-                  className="wrap-input100 validate-input"
-                  data-validate="Valid email is required: ex@abc.xyz"
-                >
-                  <input
-                    className="input100"
-                    type="text"
-                    name="email"
-                    placeholder="Email"
-                  />
-                  <span className="focus-input100" />
-                  <span className="symbol-input100">
-                    <i className="fa fa-envelope" aria-hidden="true" />
-                  </span>
-                </div>
-                <div
-                  className="wrap-input100 validate-input"
-                  data-validate="Password is required"
-                >
-                  <input
-                    className="input100"
-                    type="password"
-                    name="pass"
-                    placeholder="Password"
-                  />
-                  <span className="focus-input100" />
-                  <span className="symbol-input100">
-                    <i className="fa fa-lock" aria-hidden="true" />
-                  </span>
-                </div>
-
-                <div className="container-login100-form-btn">
-                  <button className="login100-form-btn">Login</button>
-                </div>
-
-                <div className="text-center p-t-12">
-                  <span className="txt1">Forgot</span>
-                  <a className="txt2" href="#">
-                    Username / Password?
-                  </a>
-                </div>
-                <div className="text-center p-t-136">
-                  <a className="txt2" href="#">
-                    Create your Account
-                    <i
-                      className="fa fa-long-arrow-right m-l-5"
-                      aria-hidden="true"
-                    />
-                  </a>
-                </div>
-              </form>
+      <div className="login">
+        <div className="login-form wrapper fadeInDown">
+          <div id="formContentLogin">
+            <div className="form-title">
+              <h2 className="active"> Đăng nhập vào hệ thống SmartBank </h2>
             </div>
+            <div className="fadeIn first">
+              <img src={logo} id="icon-login" alt="User Icon" />
+            </div>
+            <form onSubmit={this.handleFormLoginSubmit}>
+              <input
+                type="text"
+                id="username"
+                className="fadeIn second"
+                name="login"
+                placeholder="Tài khoản"
+              />
+              <input
+                type="text"
+                id="password"
+                className="fadeIn third pass"
+                name="login"
+                placeholder="Mật khẩu"
+                autoComplete="off"
+              />
+              <ReCAPTCHA
+                className="recapcha"
+                theme = "dark"
+                sitekey="6LcyUYQUAAAAADF-XWVPY76cty0vNK7kx_fkEobL"
+                onChange={this.handleFormRecapcha}
+                onExpired={this.handleFormExpRecapcha}
+              />
+              <input
+                type="submit"
+                className="fadeIn fourth"
+                value="Đăng nhập"
+              />
+            </form>
+            <div id="formFooter" />
           </div>
         </div>
       </div>

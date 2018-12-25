@@ -1,8 +1,4 @@
-.user-acc-payment {
-  width: 100%;
-}
-
-.user-accpay-header {
+.user-acc-header {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -14,16 +10,12 @@
   border-top-left-radius: 5px;
 }
 
-.user-accpay-body {
+.user-acc-body {
   padding-right: 15px;
   padding-left: 15px;
 }
 
-.col-form-input-accpay-custom {
-  width: 100%;
-  flex: 1;
-}
-
-.col-form-label-accpay-custom {
-  color: darkred;
+.warning {
+  color: red;
+  font-weight: bold;
 }
