@@ -16,7 +16,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 //app.use(express.multipart());
 
 app.use('/api/employee/',verifyAccessToken,employeeCtrl);
-app.use('/api/account/',verifyAccessToken,accountCtrl);
+app.use('/api/account/',accountCtrl);
 app.use('/api/banking/',verifyAccessToken,bankingCtrl);
 
 app.use(function(req, res, next) {

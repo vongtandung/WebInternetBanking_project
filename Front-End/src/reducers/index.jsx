@@ -6,6 +6,6 @@ import FetchReducer from './FetchReducer';
 
 const rootReducer =  combineReducers({
     popup: PopupReducer,
-    fetchData: FetchReducer
+    resFetch: FetchReducer
 });
 export default rootReducer;

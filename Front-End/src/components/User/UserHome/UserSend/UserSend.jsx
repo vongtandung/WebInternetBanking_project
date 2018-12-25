@@ -1,24 +1,52 @@
 import React, { Component } from "react";
 import "./UserSend.css";
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
+import WebService from "../../../../utilities/WebServices";
+import SystemHelper from "../../../../utilities/System.helper";
 import * as actions from "../../../../actions";
 import moneySendIco from "../../../../assets/images/ico/send-money-ico.png";
 import label from "../../../../assets/images/pic/label.png";
 
 class UserSend extends Component {
+  constructor() {
+    super();
+    this.state = {
+      accPayList: [],
+      accPaySel: null
+    };
+    this.webService = new WebService();
+    this.helper = new SystemHelper();
+  }
   componentWillMount() {
     this.handleRoute(true);
   }
   componentWillUnmount() {
     this.handleRoute(false);
   }
-  componentDidMount(){
-    actions.fetchData("getPayAcc")
+  componentDidMount() {
+    this.haddleGetPayAccApi();
   }
+  haddleGetPayAccApi = () => {
+    const self = this;
+    self.webService.getPaymentAcc().then(res => {
+      if (res.return_code === 1) {
+        self.setState({ accPayList: res.data });
+      } else if (res.return_code === -1) {
+        self.props.showPopup(res.return_mess, "", "error");
+      }
+    });
+  };
   handleRoute = value => {
     this.props.isRoute(value);
   };
+  handlekey = e => {};
+  handleAccPaySel = (e) =>{
+    this.setState({accPaySel: e.target.value})
+  }
   render() {
+    const accPayList = this.state.accPayList;
+    const accPaySel = this.state.accPaySel;
     return (
       <div className="user-send-money">
         <div className="user-send-header">
@@ -45,9 +73,21 @@ class UserSend extends Component {
                     Tài khoản nguồn
                   </label>
                   <div className="col-form-input-custom">
-                    <select id="accList" className="form-control">
-                      <option defaultValue>Choose...</option>
-                      <option>...</option>
+                    <select
+                      ref="accPaySel"
+                      id="accList"
+                      className="form-control"
+                      onChange={this.handleAccPaySel}
+                    >
+                      {accPayList.length > 0
+                        ? accPayList.map((data, index) => {
+                            return (
+                              <option key={index} value={data.balance}>
+                                {data.accountNumber}
+                              </option>
+                            );
+                          })
+                        : null}
                     </select>
                   </div>
                 </div>
@@ -60,7 +100,7 @@ class UserSend extends Component {
                   </label>
                   <div className="col-form-input-custom col-form-input-readonly">
                     <label className="col-form-label col-form-label-lg">
-                      123132132 &#8363;
+                      {accPaySel}
                     </label>
                   </div>
                 </div>
@@ -101,6 +141,7 @@ class UserSend extends Component {
                       className="form-control"
                       id="accRevId"
                       placeholder="Nhập số tài khoản"
+                      onKeyUp={this.handlekey}
                     />
                   </div>
                 </div>
@@ -113,10 +154,10 @@ class UserSend extends Component {
                   </label>
                   <div className="col-form-input-custom col-form-input-readonly">
                     <input
+                      ref="nameRecive"
                       type="text"
                       className="form-control"
                       id="accRevName"
-                      value=""
                       readOnly
                     />
                   </div>
@@ -133,8 +174,6 @@ class UserSend extends Component {
                       type="checkbox"
                       className="form-control"
                       id="accRevSave"
-                      value=""
-                      readOnly
                     />
                   </div>
                 </div>
@@ -150,7 +189,6 @@ class UserSend extends Component {
                       type="text"
                       className="form-control"
                       id="accRevNameSave"
-                      value=""
                     />
                   </div>
                 </div>
@@ -220,18 +258,20 @@ class UserSend extends Component {
               </div>
             </div>
             <div className="user-send-footer">
-              <button type="submit" className="btn btn-transfer">Xác nhận</button>
+              <button type="submit" className="btn btn-transfer">
+                Xác nhận
+              </button>
             </div>
           </form>
         </div>
-        {console.log(this.props.fetchData.response)}
       </div>
     );
   }
 }
 
-const mapStateToProps = state => ({
-  fetchData: state.fetchData
-});
-
-export default connect(mapStateToProps, actions)(UserSend);
+export default withRouter(
+  connect(
+    null,
+    actions
+  )(UserSend)
+);

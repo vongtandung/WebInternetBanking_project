@@ -1,10 +1,10 @@
 import decode from 'jwt-decode';
 import queryString from 'query-string';
+
 export default class WebService {
     // Initializing important variables
     constructor(domain) {
-        this.apiDomain = domain || 'http://172.16.7.234:3001/api'  // API server domain
-        this.key = 'AIzaSyA6Ya_QfVc1b17ay6l-ncKR_S-53mgZW8A'
+        this.apiDomain = domain || 'http://localhost:3001/api'  // API server domain
         this.fetchDataApi = this.fetchDataApi.bind(this) // React binding stuff
     }
 
@@ -46,8 +46,6 @@ export default class WebService {
     //FOR USER
     //#URl: /user
     getPaymentAcc() {
-        console.log("ok")
-
         const param = {
             userId: this.getIdUser(),
         }
@@ -71,6 +69,7 @@ export default class WebService {
             json: true,
             body: JSON.stringify(param),
         }).then(res => {
+            console.log(res)
             return res;
         })
     }

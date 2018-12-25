@@ -4,9 +4,9 @@ import { connect } from 'react-redux';
 import { withRouter } from "react-router-dom";
 import WebService from "../../../utilities/WebServices";
 import SystemHelper from "../../../utilities/System.helper";
+import * as actions from '../../../actions';
 import ReCAPTCHA from "react-google-recaptcha";
 import logo from "../../../assets/images/pic/bank-logo.png";
-import * as actions from '../../../actions';
 
 class Login extends Component {
   constructor() {

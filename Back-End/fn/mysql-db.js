@@ -5,7 +5,7 @@ var createConnection = () => {
         host: '127.0.0.1',
     	port: '3306',
     	user: 'root',
-    	password: 'T@ndung2609',
+    	password: 'Milule123',
     	database: 'banking'
     });
 }

@@ -17,7 +17,6 @@ class Popup extends Component {
           type={this.props.popup.type}
           onConfirm={this.closePopup}
         />
-        {console.log(this.props)}
       </div>
     );
   }
