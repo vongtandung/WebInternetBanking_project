@@ -17,6 +17,9 @@ router.post('/login',(req,res)=>{
             authRepo.updateRefreshToken(userEntity.id, rfToken)
                 .then(value => {
                     res.json({
+                        "return_code":1,
+                        "return_mess":"lofin success",
+                        "data":{
                         auth: true,
                         id: userEntity.id,
                         name: userEntity.name,
@@ -25,13 +28,13 @@ router.post('/login',(req,res)=>{
                         phone: userEntity.phone,
                         permission: userEntity.permission,
                         access_token: acToken,
-                        refresh_token: rfToken
+                        refresh_token: rfToken}
                     })
                 })
                 .catch(err => {
                     console.log(err);
                     res.statusCode = 500;
-                    res.end('View error log on console');
+                    res.end(res.json({"return_code":-1,"return_mess":"fail"}));
                 })
         } else {
             res.json({
@@ -42,7 +45,7 @@ router.post('/login',(req,res)=>{
     .catch(err => {
         console.log(err);
         res.statusCode = 20;
-        res.end('View error log on console');
+        res.end(res.json({"return_code":-1,"return_mess":"fail"}));
     })
 })
 
@@ -52,7 +55,8 @@ router.post('/renewtoken', (req, res) => {
             if (rows.length === 0) {
                 res.statusCode = 400;
                 res.json({
-                    msg: 'invalid refresh-token'
+                    return_code:-1,
+                    return_mess: 'invalid refresh-token'
                 });
                 throw new Error('abort-chain'); // break promise chain
 
@@ -66,6 +70,8 @@ router.post('/renewtoken', (req, res) => {
             var userObj = rows[0];
             var token = authRepo.generateAccessToken(userObj);
             res.json({
+                return_code:1,
+                return_mess: 'succeess',
                 access_token: token
             });
         })
