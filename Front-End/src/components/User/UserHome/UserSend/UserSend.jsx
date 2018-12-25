@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import "./UserSend.css";
+import { connect } from 'react-redux';
+import * as actions from "../../../../actions";
 import moneySendIco from "../../../../assets/images/ico/send-money-ico.png";
 import label from "../../../../assets/images/pic/label.png";
 
@@ -9,6 +11,9 @@ class UserSend extends Component {
   }
   componentWillUnmount() {
     this.handleRoute(false);
+  }
+  componentDidMount(){
+    actions.fetchData("getPayAcc")
   }
   handleRoute = value => {
     this.props.isRoute(value);
@@ -146,7 +151,6 @@ class UserSend extends Component {
                       className="form-control"
                       id="accRevNameSave"
                       value=""
-                      readOnly
                     />
                   </div>
                 </div>
@@ -220,9 +224,14 @@ class UserSend extends Component {
             </div>
           </form>
         </div>
+        {console.log(this.props.fetchData.response)}
       </div>
     );
   }
 }
 
-export default UserSend;
+const mapStateToProps = state => ({
+  fetchData: state.fetchData
+});
+
+export default connect(mapStateToProps, actions)(UserSend);

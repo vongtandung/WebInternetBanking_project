@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import "./User.css";
 import { Switch, Route, Redirect } from "react-router-dom";
+import WithAuth from "./../../utilities/WithAuth";
 import UserHome from "./UserHome";
 import UserHistory from "./UserHistory";
 
@@ -20,4 +21,4 @@ class User extends Component {
   }
 }
 
-export default User;
+export default WithAuth(User);

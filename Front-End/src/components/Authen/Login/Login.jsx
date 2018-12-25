@@ -1,8 +1,12 @@
 import React, { Component } from "react";
 import "./Login.css";
+import { connect } from 'react-redux';
+import { withRouter } from "react-router-dom";
+import WebService from "../../../utilities/WebServices";
 import SystemHelper from "../../../utilities/System.helper";
 import ReCAPTCHA from "react-google-recaptcha";
 import logo from "../../../assets/images/pic/bank-logo.png";
+import * as actions from '../../../actions';
 
 class Login extends Component {
   constructor() {
@@ -10,23 +14,51 @@ class Login extends Component {
     this.state = {
       recapValue: ""
     }
-    this.helper = new SystemHelper()
+    this.webService = new WebService();
+    this.helper = new SystemHelper();
   }
-  componentWillMount = () => {
-    this.props.isLogged(true);
+  componentWillMount() {
+    if (this.webService.isUser()) {
+      this.props.history.push("./user");
+    } else if (this.webService.isAdmin()) {
+      this.props.history.push("./manager");
+    } else {
+      this.props.isLogged(true);
+    }
   };
-  handleFormRecapcha = (value) =>{
-    this.setState({recapValue: value});
+  handleFormRecapcha = (value) => {
+    this.setState({ recapValue: value });
   }
-  handleFormExpRecapcha = () =>{
-    this.setState({recapValue: ""});
+  handleFormExpRecapcha = () => {
+    this.setState({ recapValue: "" });
   }
-  handleFormLoginSubmit = (e) =>{
+  handleFormLoginSubmit = (e) => {
     e.preventDefault();
     const validate = this.helper.validateLogin(e.target.username.value, e.target.password.value, this.state.recapValue)
-    if (validate.isValid === false){
+    if (validate.isValid === false) {
+      this.props.showPopup(validate.mess, "", "error");
     } else {
-
+      this.webService.login(e.target.username.value, e.target.password.value)
+        .then(res => {
+          const data = res.data
+          if (res.return_code === 1) {
+            this.webService.setInfo(
+              data.id,
+              data.name,
+              data.username,
+              data.phone,
+              data.permission,
+              data.access_token,
+              data.refresh_token
+            );
+            if (this.webService.isUser()) {
+              this.props.history.push("/user");
+            }
+          }
+          else if (res.return_code === -1) {
+            this.props.showPopup(res.return_mess, "", "error");
+          }
+        })
     }
   }
 
@@ -59,7 +91,7 @@ class Login extends Component {
               />
               <ReCAPTCHA
                 className="recapcha"
-                theme = "dark"
+                theme="dark"
                 sitekey="6LcyUYQUAAAAADF-XWVPY76cty0vNK7kx_fkEobL"
                 onChange={this.handleFormRecapcha}
                 onExpired={this.handleFormExpRecapcha}
@@ -78,4 +110,4 @@ class Login extends Component {
   }
 }
 
-export default Login;
+export default withRouter(connect(null, actions)(Login));
