@@ -22,19 +22,32 @@ exports.subtractBalance = (sub, accountNumber) => {
   var sql = `update paymentAccount set paymentAccount.balance = paymentAccount.balance - ${sub} where accountNumber = '${accountNumber}'`;
   return db.load(sql);
 };
-exports.addTransHistory = (req, type) => {
+exports.addTransHistory = (acc, req, type) => {
+  //type =0 => nhận thêm , 1 => chuyển tiền , 2 nạp thêm tiền
   var dt = dateTime.create();
   var transId = dt.format("ymdHMSN");
   var time = dt.format("Y/m/d H:M:S:N");
+  var stt;
+  var amount;
+  if (type === 0) {
+    stt = "Nhận " + req.amount + " từ " + req.sendName;
+    amount = "+" + req.amount;
+  } else {
+    if (type === 1) {
+      stt = "Chuyển " + req.amount + " đến " + req.reciveName;
+      amount = "-" + req.amount;
+    } else {
+      stt = "Chuyển " + req.amount + " vào tài khoản ";
+      amount = "+" + req.amount;
+    }
+  }
   var sql = `insert into transactionHistory values('${transId}','${
-    req.sendAccount
-  }','${req.reciveAccount}', '${req.amount}','${
-    req.note
-  }','${time}','${type}')`;
+    acc
+  }','${stt}', '${amount}','${req.note}','${time}')`;
   return db.insert(sql);
 };
-exports.getTransHistory = accountNumber => {
-  var sql = `select * from transactionHistory where sendAccount = ${accountNumber} or reciveAccount =${accountNumber}`;
+exports.getTransHistory = userId => {
+  var sql = `select * from transactionHistory, paymentAccount where paymentAccount.userId = '${userId}' and transactionHistory.account = paymentAccount.accountNumber order by time`;
   return db.load(sql);
 };
 exports.countPaymentAccountOfUser = userId => {
@@ -82,13 +95,15 @@ exports.savereciverlist = req => {
           }','${req.name}')`;
           return db.load(sql1);
         } else {
-          var sql2 = `update reciverList set name = '${req.name}' where userId = ${
-            req.userId
-          } and accountNumber =${req.accountNumber}`;
+          var sql2 = `update reciverList set name = '${
+            req.name
+          }' where userId = ${req.userId} and accountNumber =${
+            req.accountNumber
+          }`;
           return db.load(sql2);
         }
       })
-      .then(row=> resolve(row))
+      .then(row => resolve(row))
       .catch(err => reject(err));
   });
 };

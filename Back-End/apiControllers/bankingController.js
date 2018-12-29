@@ -55,12 +55,12 @@ router.post("/transfer", (req, res) => {
     var dt = moment().format("YYYY-MM-DD HH:mm:ss");
     var date = new Date(dt);
     var period = date - row[0].time;
-    var sendAmount = req.body.amount, reciveAmount = req.body.amount;
-    if (row[0].otpnum == req.body.otp && period < 300000) {
-      if(req.body.fee == 1){
+    var sendAmount = req.body.amount,
+      reciveAmount = req.body.amount;
+    if (row[0].otpnum == req.body.otp && period > 300000) {
+      if (req.body.fee == 1) {
         reciveAmount -= TRANS_FEE;
-      }
-      else{
+      } else {
         sendAmount += TRANS_FEE;
       }
       bankingRepo
@@ -70,12 +70,16 @@ router.post("/transfer", (req, res) => {
             .addBalance(reciveAmount, req.body.reciveAccount)
             .then(row => {
               bankingRepo
-                .addTransHistory(req.body, "Trans")
+                .addTransHistory(req.body.sendAccount, req.body, 1)
                 .then(
-                  res.json({
-                    return_code: 1,
-                    return_mess: "trans success"
-                  })
+                  bankingRepo
+                    .addTransHistory(req.body.reciveAccount, req.body, 0)
+                    .then(
+                      res.json({
+                        return_code: 1,
+                        return_mess: "trans success"
+                      })
+                    )
                 )
                 .catch(err => {
                   console.log(err);
@@ -83,7 +87,7 @@ router.post("/transfer", (req, res) => {
                     .subtractBalance(reciveAmount, req.body.reciveAccount)
                     .then(
                       bankingRepo
-                      .addBalance(sendAmount, req.body.sendAccount)
+                        .addBalance(sendAmount, req.body.sendAccount)
                         .then(
                           res.end(
                             res.json({
@@ -97,16 +101,14 @@ router.post("/transfer", (req, res) => {
             })
             .catch(err => {
               console.log(err);
-              bankingRepo
-                .addBalance(sendAmount, req.body.sendAccount)
-                .then(
-                  res.end(
-                    res.json({
-                      return_code: -1,
-                      return_mess: "trans fail 3"
-                    })
-                  )
-                );
+              bankingRepo.addBalance(sendAmount, req.body.sendAccount).then(
+                res.end(
+                  res.json({
+                    return_code: -1,
+                    return_mess: "trans fail 3"
+                  })
+                )
+              );
             });
         })
         .catch(err => {
@@ -125,7 +127,7 @@ router.post("/transfer", (req, res) => {
 });
 router.post("/gettranshistory", (req, res) => {
   bankingRepo
-    .getTransHistory(req.body.accountNumber)
+    .getTransHistory(req.body.userId)
     .then(row => {
       res.json({ return_code: 1, return_mess: "success", data: row });
     })

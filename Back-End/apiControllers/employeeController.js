@@ -35,7 +35,7 @@ router.post("/addbalance", (req, res) => {
     .then(row => {
       if (row != null) {
         bankingRepo
-          .addTranshistory(req.body, "Add Balance")
+          .addTranshistory(req.body.accountNumber,req.body,2)
           .then(
             res.json({ return_code: 1, return_mess: "add balance success" })
           );
