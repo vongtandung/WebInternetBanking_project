@@ -227,4 +227,12 @@ router.post("/savenewreciver", (req, res) => {
       res.json({ return_code: -1, return_mess: "fail" });
     });
 });
+router.post("/deleteinreciverlist", (req, res) => {
+  bankingRepo
+    .deleteinreciverlist(req.body.userId, req.body.accountNumber)
+    .then(res.json({ return_code: 1, return_mess: "deleted" }))
+    .catch(err => {
+      res.json({ return_code: -1, return_mess: "delete fail" })
+    });
+});
 module.exports = router;

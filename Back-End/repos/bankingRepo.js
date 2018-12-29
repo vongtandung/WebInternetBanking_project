@@ -107,3 +107,7 @@ exports.savereciverlist = req => {
       .catch(err => reject(err));
   });
 };
+exports.deleteinreciverlist = (userId, accountNumber) => {
+    var sql = `delete from reciverList where userId = '${userId}' and accountNumber = '${accountNumber}'`;
+    return db.insert(sql) 
+};
