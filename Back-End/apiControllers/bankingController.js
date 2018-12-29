@@ -4,6 +4,7 @@ var express = require("express"),
   fileSync = require("lowdb/adapters/FileSync"),
   bankingRepo = require("../repos/bankingRepo");
 const nodemailer = require("nodemailer");
+const TRANS_FEE = 1000;
 
 var router = express.Router();
 
@@ -49,92 +50,76 @@ router.post("/getinfobyaccountNumber", (req, res) => {
     });
 });
 router.post("/transfer", (req, res) => {
+  //fee = 0, sender pay, fee =1 reciver pay
   bankingRepo.verifyotp(req.body.email).then(row => {
     var dt = moment().format("YYYY-MM-DD HH:mm:ss");
     var date = new Date(dt);
     var period = date - row[0].time;
+    var sendAmount = req.body.amount, reciveAmount = req.body.amount;
     if (row[0].otpnum == req.body.otp && period < 300000) {
+      if(req.body.fee == 1){
+        reciveAmount -= TRANS_FEE;
+      }
+      else{
+        sendAmount += TRANS_FEE;
+      }
       bankingRepo
-        .getBalance(req.body.sendAccount)
+        .subtractBalance(sendAmount, req.body.sendAccount)
         .then(row => {
-          if (row[0].balance > req.body.amount) {
-            bankingRepo
-              .subtractBalance(
-                req.body.amount,
-                req.body.sendAccount,
-                row[0].balance
-              )
-              .then(row => {
-                bankingRepo
-                  .addBalance(req.body.amount, req.body.reciveAccount)
-                  .then(row => {
-                    bankingRepo
-                      .addTransHistory(req.body, "Trans")
-                      .then(
-                        res.json({
-                          return_code: "1",
-                          return_mess: "trans success"
-                        })
-                      )
-                      .catch(err => {
-                        console.log(err);
-                        bankingRepo
-                          .subtractBalance(
-                            req.body.amount,
-                            req.body.reciveAccount
-                          )
-                          .then(
-                            bankingRepo
-                              .addBalance(req.body.amount, req.body.sendAccount)
-                              .then(
-                                res.end(
-                                  res.json({
-                                    return_code: "-1",
-                                    return_mess: "trans fail 1"
-                                  })
-                                )
-                              )
-                          );
-                      });
-                  })
-                  .catch(err => {
-                    console.log(err);
-                    bankingRepo
-                      .addBalance(req.body.amount, req.body.sendAccount)
-                      .then(
-                        res.end(
-                          res.json({
-                            return_code: "-1",
-                            return_mess: "trans fail 3"
-                          })
-                        )
-                      );
-                  });
-              })
-              .catch(err => {
-                console.log(err);
-                res.end(
+          bankingRepo
+            .addBalance(reciveAmount, req.body.reciveAccount)
+            .then(row => {
+              bankingRepo
+                .addTransHistory(req.body, "Trans")
+                .then(
                   res.json({
-                    return_code: "-1",
-                    return_mess: "trans fail 5"
+                    return_code: 1,
+                    return_mess: "trans success"
                   })
+                )
+                .catch(err => {
+                  console.log(err);
+                  bankingRepo
+                    .subtractBalance(reciveAmount, req.body.reciveAccount)
+                    .then(
+                      bankingRepo
+                      .addBalance(sendAmount, req.body.sendAccount)
+                        .then(
+                          res.end(
+                            res.json({
+                              return_code: -1,
+                              return_mess: "trans fail 1"
+                            })
+                          )
+                        )
+                    );
+                });
+            })
+            .catch(err => {
+              console.log(err);
+              bankingRepo
+                .addBalance(sendAmount, req.body.sendAccount)
+                .then(
+                  res.end(
+                    res.json({
+                      return_code: -1,
+                      return_mess: "trans fail 3"
+                    })
+                  )
                 );
-              });
-          } else {
-            res.end(
-              res.json({
-                return_code: "-1",
-                return_mess: "no enough money"
-              })
-            );
-          }
+            });
         })
         .catch(err => {
           console.log(err);
-          res.end(res.json({ return_code: "-1", return_mess: "trans fail 6" }));
+          res.end(
+            res.json({
+              return_code: -1,
+              return_mess: "trans fail 5"
+            })
+          );
         });
     } else {
-      res.end(res.json({ return_code: "-1", return_mess: "OTP Wrong" }));
+      res.end(res.json({ return_code: -1, return_mess: "Wrong OTP" }));
     }
   });
 });
@@ -164,14 +149,14 @@ router.post("/deletepaymentaccount", (req, res) => {
         } else {
           res.json({
             return_mess: "Balnace is more than 0",
-            return_code: "-1"
+            return_code: -1
           });
         }
       });
     } else {
       res.json({
         return_mess: "account have less than 1 payment account",
-        return_code: "-1"
+        return_code: -1
       });
     }
   });
@@ -181,7 +166,6 @@ router.post("/send", async function(req, res) {
     name: req.body.name,
     email: "lovemoneybanking@gmail.com"
   };
-
   var get = (await Math.random()) * (999999 - 100000) + 100000;
   var otp = parseInt(get);
   var mailOptions = {
@@ -206,12 +190,12 @@ router.post("/send", async function(req, res) {
     }
   });
   var rdt = moment().format("YYYY-MM-DD HH:mm:ss");
-  bankingRepo.opt(req.body.reciver, otp, rdt).then(
+  bankingRepo.otp(req.body.reciver, otp, rdt).then(
     transporter.sendMail(mailOptions, (err, res) => {
       if (err) {
         return console.log(err);
       } else {
-        console.log(JSON.stringify(res));
+        console.log("Sent Mail success");
       }
     })
   );
@@ -235,7 +219,10 @@ router.post("/savenewreciver", (req, res) => {
       res.json({
         return_code: 1,
         return_mess: "save reciver list success"
-      }))
-    .catch(err =>{res.json({ return_code: -1, return_mess: "fail" })});
+      })
+    )
+    .catch(err => {
+      res.json({ return_code: -1, return_mess: "fail" });
+    });
 });
 module.exports = router;

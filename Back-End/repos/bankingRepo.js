@@ -18,8 +18,8 @@ exports.addBalance = (plus, accountNumber) => {
   var sql = `update paymentAccount set paymentAccount.balance = paymentAccount.balance + ${plus} where accountNumber = '${accountNumber}'`;
   return db.load(sql);
 };
-exports.subtractBalance = (sub, accountNumber, balance) => {
-  var sql = `update paymentAccount set paymentAccount.balance = paymentAccount.balance - ${sub} where accountNumber = '${accountNumber}' and balance = ${balance}`;
+exports.subtractBalance = (sub, accountNumber) => {
+  var sql = `update paymentAccount set paymentAccount.balance = paymentAccount.balance - ${sub} where accountNumber = '${accountNumber}'`;
   return db.load(sql);
 };
 exports.addTransHistory = (req, type) => {
@@ -46,15 +46,23 @@ exports.getBalance = accountNumber => {
   return db.load(sql);
 };
 exports.deletePaymentAccount = accountNumber => {
-  var sql = `delete  from paymentAccount where accountNumber = ${accountNumber}`;
+  var sql = `delete from paymentAccount where accountNumber = ${accountNumber}`;
   return db.load(sql);
 };
-exports.opt = (email, otp, time) => {
-  var sql = `insert into OTP(email,otpnum,time) values('${email}','${otp}','${time}')`;
-  return db.insert(sql);
+exports.otp = (email, otp, time) => {
+  return new Promise((resolve, reject) => {
+    var sql = `delete from OTP where email = '${email}'`;
+    db.insert(sql) // delete
+      .then(() => {
+        sql = `insert into OTP(email,otpnum,time) values('${email}','${otp}','${time}')`;
+        return db.insert(sql);
+      })
+      .then(r => resolve(r))
+      .catch(err => reject(err));
+  });
 };
 exports.verifyotp = email => {
-  var sql = `select otpnum,time from OTP where email = '${email}' order by time desc limit 1`;
+  var sql = `select otpnum, time from OTP where email = '${email}'`; //order by time desc limit 1`;
   return db.load(sql);
 };
 exports.getreciverlist = userId => {
