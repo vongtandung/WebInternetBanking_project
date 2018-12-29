@@ -27,7 +27,7 @@ export const fetchFailure = error => ({
   payload: { error }
 });
 
-export const fetchData = (action, data) => {
+export const fetchUserRecData = (action, data) => {
   return dispatch => {
     dispatch(fetchBegin());
     switch (action) {

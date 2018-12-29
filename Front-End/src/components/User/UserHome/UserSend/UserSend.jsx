@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "./UserSend.css";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
+import CurrencyInput from 'react-currency-input';
 import WebService from "../../../../utilities/WebServices";
 import SystemHelper from "../../../../utilities/System.helper";
 import * as actions from "../../../../actions";
@@ -13,7 +14,12 @@ class UserSend extends Component {
     super();
     this.state = {
       accPayList: [],
-      accPaySel: null
+      accNumSel: '',
+      accPaySel: '',
+      accRecName: '',
+      accRecExist: false,
+      accMoneySend: null,
+      accOtpReq: false
     };
     this.webService = new WebService();
     this.helper = new SystemHelper();
@@ -24,29 +30,145 @@ class UserSend extends Component {
   componentWillUnmount() {
     this.handleRoute(false);
   }
-  componentDidMount() {
-    this.haddleGetPayAccApi();
+  componentDidMount(prevProps, prevState) {
+      this.handleGetPayAccApi();
   }
-  haddleGetPayAccApi = () => {
+  handleGetPayAccApi = () => {
     const self = this;
     self.webService.getPaymentAcc().then(res => {
       if (res.return_code === 1) {
-        self.setState({ accPayList: res.data });
+        self.setState({
+          accPayList: res.data,
+          accPaySel: res.data[0].balance
+        });
       } else if (res.return_code === -1) {
         self.props.showPopup(res.return_mess, "", "error");
       }
     });
   };
+  handleGetRevAccApi = (accountNumber) => {
+    const self = this;
+    self.webService.getInfAcc(accountNumber).then(res => {
+      if (res.return_code === 1) {
+        self.setState({
+          accRecName: res.data[0].name,
+          accRecExist: true
+        });
+      } else if (res.return_code === -1) {
+        self.props.showPopup("Không tìm thấy số tài khoản", "", "error");
+      }
+    });
+  };
+  handleOptApi = (accountNumber) => {
+    const self = this;
+    self.setState({ accOtpReq: true },
+      () => {
+        self.webService.getOtpAccSend(accountNumber).then(res => {
+          if (res.return_code === 1) {
+          } else if (res.return_code === -1) {
+            self.props.showPopup("Error", "", "error");
+          }
+        });
+      })
+  };
+  handleMoneyTransferApi = (accSend, accReci, amount, note, otp, fee) => {
+    const self = this;
+    self.setState({ accOtpReq: true },
+      () => {
+        self.webService.getMoneyTransfer(accSend, accReci, amount, note, otp, fee).then(res => {
+          if (res.return_code === 1) {
+              self.props.showPopup("Bạn đã chuyển tiền thành công", "", "success");
+              self.setState({
+                accPayList: [],
+                accNumSel: '',
+                accPaySel: '',
+                accRecName: '',
+                accRecExist: false,
+                accMoneySend: null,
+                accOtpReq: false
+              }, () => {
+                self.refs.accRevId.value = "";
+                self.handleGetPayAccApi();
+              })
+          } else if (res.return_code === -1) {
+            self.props.showPopup("Không tìm thấy số tài khoản", "", "error");
+          }
+        });
+      })
+  };
   handleRoute = value => {
     this.props.isRoute(value);
   };
-  handlekey = e => {};
-  handleAccPaySel = (e) =>{
-    this.setState({accPaySel: e.target.value})
+  handleAccRevChange = e => {
+    e.preventDefault();
+    if (e.target.value.length > 0 && e.target.value.length < 17) {
+      this.setState({
+        accRecName: "Đang tìm kiếm ...",
+        accRecExist: false
+      });
+    } else if (e.target.value.length === 0) {
+      this.setState({
+        accRecName: "",
+        accRecExist: false
+      });
+    } else if (e.target.value.length === 17) {
+      this.handleGetRevAccApi(e.target.value);
+    }
+  };
+  handleAccPaySelChange = e => {
+    e.preventDefault();
+    this.setState({ accPaySel: e.target.value });
   }
+  handleMoneySendChange = (e, maskedvalue, floatvalue) => {
+    e.preventDefault();
+    this.setState({ accMoneySend: floatvalue })
+  }
+  handleFormSubmit = e => {
+    e.preventDefault();
+    let accountNumSelInd = e.nativeEvent.target.accList.selectedIndex;
+    let accountNumSel = e.nativeEvent.target.accList[accountNumSelInd].text;
+    if (this.state.accOtpReq === false) {
+      const validate = this.helper.validateSendMoney(
+        this.state.accRecExist,
+        this.state.accPaySel,
+        this.state.accMoneySend,
+        e.target.accInfoSend.value
+      );
+      if (validate.isValid === false) {
+        this.props.showPopup(validate.mess, "", "error");
+      } else {
+        this.handleOptApi(accountNumSel);
+      }
+    } else {
+      this.handleMoneyTransferApi(
+        accountNumSel,
+        e.target.accRevId.value,
+        this.state.accMoneySend,
+        e.target.accInfoSend.value,
+        e.target.accOtpReq.value,
+        e.target.accFeeSend.value
+      );
+    }
+  }
+  handleSendMoneyBtn = () => {
+    if (this.state.accOtpReq === false) {
+      return (
+        <span>Xác nhận</span>
+      )
+    }
+    else {
+      return (
+        <span>Xác nhận giao dịch</span>
+      )
+    }
+  }
+
   render() {
     const accPayList = this.state.accPayList;
     const accPaySel = this.state.accPaySel;
+    const accRecName = this.state.accRecName;
+    const accMoneySend = this.state.accMoneySend;
+    const accOtpReq = this.state.accOtpReq
     return (
       <div className="user-send-money">
         <div className="user-send-header">
@@ -56,7 +178,7 @@ class UserSend extends Component {
           </div>
         </div>
         <div className="user-send-body">
-          <form>
+          <form onSubmit={this.handleFormSubmit}>
             <div className="user-send-info">
               <div className="arrow-tag clearfix">
                 <img src={label} alt="tag-next" />
@@ -77,16 +199,21 @@ class UserSend extends Component {
                       ref="accPaySel"
                       id="accList"
                       className="form-control"
-                      onChange={this.handleAccPaySel}
+                      disabled={accOtpReq}
+                      onChange={this.handleAccPaySelChange}
                     >
                       {accPayList.length > 0
                         ? accPayList.map((data, index) => {
-                            return (
-                              <option key={index} value={data.balance}>
+                          return (
+                            index === 0 ?
+                              <option key={index} value={data.balance} defaultValue>
                                 {data.accountNumber}
                               </option>
-                            );
-                          })
+                              : <option key={index} value={data.balance}>
+                                {data.accountNumber}
+                              </option>
+                          );
+                        })
                         : null}
                     </select>
                   </div>
@@ -122,7 +249,7 @@ class UserSend extends Component {
                     Tìm kiếm
                   </label>
                   <div className="col-form-input-custom">
-                    <select id="accRevList" className="form-control">
+                    <select id="accRevList" className="form-control" disabled={accOtpReq}>
                       <option defaultValue>Choose...</option>
                       <option>...</option>
                     </select>
@@ -137,11 +264,14 @@ class UserSend extends Component {
                   </label>
                   <div className="col-form-input-custom col-form-input-readonly">
                     <input
+                      ref="accRevId"
                       type="text"
                       className="form-control"
                       id="accRevId"
                       placeholder="Nhập số tài khoản"
-                      onKeyUp={this.handlekey}
+                      maxLength="17"
+                      disabled={accOtpReq}
+                      onChange={this.handleAccRevChange}
                     />
                   </div>
                 </div>
@@ -158,6 +288,8 @@ class UserSend extends Component {
                       type="text"
                       className="form-control"
                       id="accRevName"
+                      disabled={accOtpReq}
+                      value={accRecName}
                       readOnly
                     />
                   </div>
@@ -174,6 +306,7 @@ class UserSend extends Component {
                       type="checkbox"
                       className="form-control"
                       id="accRevSave"
+                      disabled={accOtpReq}
                     />
                   </div>
                 </div>
@@ -189,6 +322,7 @@ class UserSend extends Component {
                       type="text"
                       className="form-control"
                       id="accRevNameSave"
+                      disabled={accOtpReq}
                     />
                   </div>
                 </div>
@@ -209,13 +343,17 @@ class UserSend extends Component {
                       Số tiền
                     </label>
                     <div className="col-form-input-custom input-group">
-                      <input
-                        type="text"
+                      <CurrencyInput
+                        ref="accMoneySend"
                         className="form-control"
                         id="accMoneySend"
                         placeholder="Nhập số tiền"
                         aria-describedby="inputGroupPrepend"
+                        precision="0"
                         required
+                        value={accMoneySend}
+                        disabled={accOtpReq}
+                        onChangeEvent={this.handleMoneySendChange}
                       />
                       <div className="input-group-prepend">
                         <span className="input-group-text" id="accMoneySend">
@@ -237,6 +375,7 @@ class UserSend extends Component {
                         className="form-control"
                         id="accInfoSend"
                         placeholder="Nhập nội dung"
+                        disabled={accOtpReq}
                       />
                     </div>
                   </div>
@@ -248,18 +387,33 @@ class UserSend extends Component {
                       Phí chuyển tiền
                     </label>
                     <div className="col-form-input-custom col-form-input-readonly">
-                      <select id="accFeeSend" className="form-control">
-                        <option defaultValue>Choose...</option>
-                        <option>...</option>
+                      <select ref="accFee" id="accFeeSend" className="form-control" disabled={accOtpReq}>
+                        <option value="0">Người chuyển trả</option>
+                        <option value="1">Người nhận trả</option>
                       </select>
                     </div>
                   </div>
                 </div>
+                <div className="otp-req" hidden={!accOtpReq}>
+                  <label
+                    htmlFor="accOtpReq"
+                    className="col-form-label col-form-label-lg col-form-label-custom"
+                  >
+                    Mã giao dịch OTP đã được gửi email của bạn, vui lòng nhập OTP để xác nhận giao dịch
+                    </label>
+                  <div className="col-form-input-custom col-form-input-readonly">
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="accOtpReq"
+                      placeholder="Nhập OTP"
+                    />
+                  </div></div>
               </div>
             </div>
             <div className="user-send-footer">
               <button type="submit" className="btn btn-transfer">
-                Xác nhận
+                {this.handleSendMoneyBtn()}
               </button>
             </div>
           </form>

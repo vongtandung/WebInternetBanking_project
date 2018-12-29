@@ -45,6 +45,7 @@ class Login extends Component {
             this.webService.setInfo(
               data.id,
               data.name,
+              data.email,
               data.username,
               data.phone,
               data.permission,

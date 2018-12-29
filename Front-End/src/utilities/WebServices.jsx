@@ -4,7 +4,7 @@ import queryString from 'query-string';
 export default class WebService {
     // Initializing important variables
     constructor(domain) {
-        this.apiDomain = domain || 'http://localhost:3001/api'  // API server domain
+        this.apiDomain = domain || 'http://172.16.7.234:3001/api'  // API server domain
         this.fetchDataApi = this.fetchDataApi.bind(this) // React binding stuff
     }
 
@@ -61,10 +61,49 @@ export default class WebService {
 
     getInfAcc(accountnumber) {
         const param = {
-            accountnumber: accountnumber,
+            accountNumber: accountnumber,
         }
         // Get a token from api server using the fetch api
         return this.fetchDataApi(`${this.apiDomain}/banking/getinfobyaccountnumber`, {
+            method: 'POST',
+            json: true,
+            body: JSON.stringify(param),
+        }).then(res => {
+            console.log(res)
+            return res;
+        })
+    }
+
+    getOtpAccSend(accountnumber) {
+        const param = {
+            userId: this.getIdUser(),
+            accountNumber: accountnumber,
+            name: this.getName(),
+            reciver: this.getEmail()
+        }
+        // Get a token from api server using the fetch api
+        return this.fetchDataApi(`${this.apiDomain}/banking/send`, {
+            method: 'POST',
+            json: true,
+            body: JSON.stringify(param),
+        }).then(res => {
+            console.log(res)
+            return res;
+        })
+    }
+
+    getMoneyTransfer(accSend, accReci, amount, note, otp, fee){
+        const param = {
+            sendAccount: accSend,
+            reciveAccount: accReci,
+            amount: amount,
+            note: note,
+            otp: otp,
+            email: this.getEmail(),
+            fee: fee
+        }
+        // Get a token from api server using the fetch api
+        return this.fetchDataApi(`${this.apiDomain}/banking/transfer`, {
             method: 'POST',
             json: true,
             body: JSON.stringify(param),
@@ -101,12 +140,13 @@ export default class WebService {
         }
     }
 
-    setInfo(id, name, username, phone, permission, accessToken, refreshToken) {
+    setInfo(id, name, email, username, phone, permission, accessToken, refreshToken) {
         // Saves user token to localStorage
         localStorage.setItem('idToken', accessToken);
         localStorage.setItem('idRefToken', refreshToken)
         localStorage.setItem('id', id)
         localStorage.setItem('name', name);
+        localStorage.setItem('email', email);
         localStorage.setItem('userName', username);
         localStorage.setItem('userPhone', phone);
         localStorage.setItem('permiss', permission);
@@ -133,6 +173,10 @@ export default class WebService {
         return localStorage.getItem('userName');
     }
 
+    getEmail() {
+        return localStorage.getItem('email');
+    }
+
     getPermission() {
         return localStorage.getItem('permiss');
     }
@@ -151,9 +195,11 @@ export default class WebService {
 
     logout() {
         // Clear user token and profile data from localStorage
-        localStorage.removeItem('idUser');
+        localStorage.removeItem('id');
         localStorage.removeItem('idToken');
         localStorage.removeItem('idRefToken');
+        localStorage.removeItem('name');
+        localStorage.removeItem('email');
         localStorage.removeItem('userName');
         localStorage.removeItem('userPhone');
         localStorage.removeItem('permiss');

@@ -104,6 +104,10 @@
   font-size: 1.5em;
 }
 
+.otp-req{
+  color: darkred;
+}
+
 @media only screen and (min-width: 641px) and (max-width: 1007px) {
   h1 {
     font-size: 1.8em;
