@@ -3,9 +3,6 @@ import { withRouter } from "react-router-dom";
 import './Error.css'
 
 class Error extends Component {
-  constructor(props) {
-    super(props);
-  }
   popBack=() => {
     this.props.history.push('/')
   }

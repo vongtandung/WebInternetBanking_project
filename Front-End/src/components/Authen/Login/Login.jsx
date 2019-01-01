@@ -46,7 +46,7 @@ class Login extends Component {
               data.id,
               data.name,
               data.email,
-              data.username,
+              data.userName,
               data.phone,
               data.permission,
               data.access_token,

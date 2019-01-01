@@ -41,13 +41,13 @@ exports.addTransHistory = (acc, req, type) => {
       amount = "+" + req.amount;
     }
   }
-  var sql = `insert into transactionHistory values('${transId}','${
-    acc
-  }','${stt}', '${amount}','${req.note}','${time}')`;
+  var sql = `insert into transactionHistory values('${transId}','${acc}','${stt}', '${amount}','${
+    req.note
+  }','${time}')`;
   return db.insert(sql);
 };
-exports.getTransHistory = userId => {
-  var sql = `select * from transactionHistory, paymentAccount where paymentAccount.userId = '${userId}' and transactionHistory.account = paymentAccount.accountNumber order by time`;
+exports.getTransHistory = accountNumber => {
+  var sql = `select * from transactionHistory, paymentAccount where paymentAccount.accountNumber = '${accountNumber}' and transactionHistory.account = paymentAccount.accountNumber order by time`;
   return db.load(sql);
 };
 exports.countPaymentAccountOfUser = userId => {
@@ -92,7 +92,7 @@ exports.savereciverlist = req => {
         if (row.length == 0) {
           var sql1 = `insert into reciverList values('${req.userId}','${
             req.accountNumber
-          }','${req.name}')`;
+          }','${req.name}', '${req.fullName}')`;
           return db.load(sql1);
         } else {
           var sql2 = `update reciverList set name = '${
@@ -108,6 +108,6 @@ exports.savereciverlist = req => {
   });
 };
 exports.deleteinreciverlist = (userId, accountNumber) => {
-    var sql = `delete from reciverList where userId = '${userId}' and accountNumber = '${accountNumber}'`;
-    return db.insert(sql) 
+  var sql = `delete from reciverList where userId = '${userId}' and accountNumber = '${accountNumber}'`;
+  return db.insert(sql);
 };

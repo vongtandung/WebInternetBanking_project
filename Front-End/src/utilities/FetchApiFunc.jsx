@@ -10,55 +10,55 @@ export const handdleGetPayAcc = () => {
         response: res
       };
     })
-    .catch(error => {
-      if (error === 401) {
-        webService
+    .catch(err => {
+      if (err === 401) {
+       return webService
           .renewToken()
           .then(res => {
             webService.updateToken(res.access_token);
-            handdleGetPayAcc();
+            return handdleGetPayAcc();
           })
-          .catch(error => {
+          .catch(err1 => {
             return {
-              error: false,
+              error: true,
               response: {}
             };
           });
-      } else if (error === 403) {
+      } else if (err === 403) {
         return {
-          error: false,
+          error: true,
           response: {}
         };
       }
     });
 };
 
-export const handdleGetInfAcc = accNumId => {
-  webService
-    .getPaymentAcc(accNumId)
+export const handdleGetTransHistory = accNumId => {
+  return webService
+    .getTransHistory(accNumId)
     .then(res => {
       return {
         error: false,
         response: res
       };
     })
-    .catch(error => {
-      if (error === 401) {
-        webService
+    .catch(err => {
+      if (err === 401) {
+       return webService
           .renewToken()
           .then(res => {
             webService.updateToken(res.access_token);
-            handdleGetInfAcc(accNumId);
+           return handdleGetTransHistory(accNumId);
           })
-          .catch(error => {
+          .catch(err1 => {
             return {
-              error: false,
+              error: true,
               response: {}
             };
           });
-      } else if (error === 403) {
+      } else if (err === 403) {
         return {
-          error: false,
+          error: true,
           response: {}
         };
       }

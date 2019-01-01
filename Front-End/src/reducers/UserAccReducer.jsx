@@ -1,34 +1,39 @@
 import {
-    FETCH_PRODUCTS_BEGIN,
-    FETCH_PRODUCTS_SUCCESS,
-    FETCH_PRODUCTS_FAILURE
+    FETCH_BEGIN,
+    FETCH_SUCCESS,
+    FETCH_FAILURE
 } from "../actions/types";
 
 const initState = {
-    response: {},
+    data: [],
     loading: false,
-    error: null
+    return_code: null,
+    return_mess: "",
+    error: false
 };
 
 export default function (state = initState, action) {
     switch (action.type) {
-        case FETCH_PRODUCTS_BEGIN:
+        case FETCH_BEGIN:
             // Mark the state as "loading" so we can show a spinner or something
             // Also, reset any errors. We're starting fresh.
             return state = {
                 loading: true,
-                error: null
+                return_code: null,
+                return_mess: ""
             };
 
-        case FETCH_PRODUCTS_SUCCESS:
+        case FETCH_SUCCESS:
             // All done: set loading "false".re
             // Also, replace the items with the ones from the server
             return state =  {
                 loading: false,
-                response: action.payload.response
+                return_code: action.payload.response.return_code,
+                return_mess: action.payload.response.return_mess,
+                data: action.payload.response.data,
             };
 
-        case FETCH_PRODUCTS_FAILURE:
+        case FETCH_FAILURE:
 
             // The request failed. It's done. So set loading to "false".
             // Save the error, so we can display it somewhere.
@@ -39,8 +44,8 @@ export default function (state = initState, action) {
             // Do whatever seems right for your use case.
             return state =  {
                 loading: false,
-                error: action.payload.error,
-                response: {}
+                error: true,
+                data: []
             };
 
         default:

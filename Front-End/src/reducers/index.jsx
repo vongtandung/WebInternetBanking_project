@@ -1,11 +1,12 @@
 
 import { combineReducers } from 'redux';
 import PopupReducer from './PopupReducer';
-import FetchReducer from './FetchReducer';
-
+import UserAccReducer from './UserAccReducer';
+import UserTransHistoryReducer from './UserTransHistoryReducer';
 
 const rootReducer =  combineReducers({
     popup: PopupReducer,
-    resFetch: FetchReducer
+    userAcc: UserAccReducer,
+    userHistory: UserTransHistoryReducer
 });
 export default rootReducer;

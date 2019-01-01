@@ -61,11 +61,10 @@ router.post('/renewtoken', (req, res) => {
                 throw new Error('abort-chain'); // break promise chain
 
             } else {
-                //console.log(rows[0]);
                 return rows[0].UserId;
             }
         })
-        .then(id => loginRepo.load(id))
+        .then(id => accountRepo.load(id))
         .then(rows => {
             var userObj = rows[0];
             var token = authRepo.generateAccessToken(userObj);

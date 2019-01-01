@@ -14,34 +14,43 @@ export const closePopup = () => ({ type: actionTypes.POPUPCLOSE });
 
 //Fetch API action
 export const fetchBegin = () => ({
-  type: actionTypes.FETCH_PRODUCTS_BEGIN
+  type: actionTypes.FETCH_BEGIN
 });
 
 export const fetchSuccess = response => ({
-  type: actionTypes.FETCH_PRODUCTS_SUCCESS,
+  type: actionTypes.FETCH_SUCCESS,
   payload: { response }
 });
 
 export const fetchFailure = error => ({
-  type: actionTypes.FETCH_PRODUCTS_FAILURE,
+  type: actionTypes.FETCH_FAILURE,
   payload: { error }
 });
 
-export const fetchUserRecData = (action, data) => {
+export const fetchUserAccData = () => {
   return dispatch => {
     dispatch(fetchBegin());
-    switch (action) {
-      case actionTypes.FETCH_INF_ACC:
-        apiFunc.handdleGetInfAcc(data).then(res => {
-          if (res.error === false) {
-            dispatch(fetchSuccess(res.response));
-          } else if (res.error === true) {
-            dispatch(fetchFailure(res.error));
-          }
-        })
-        break;
-      default:
-        return true;
-    }
+    apiFunc.handdleGetPayAcc().then(res => {
+      if (res.error === false) {
+        dispatch(fetchSuccess(res.response));
+      } else if (res.error === true) {
+        dispatch(fetchFailure(res.error));
+      }
+    });
   };
 };
+
+export const fetchUserTransData = (accNumId) => {
+  return dispatch => {
+    dispatch(fetchBegin());
+    apiFunc.handdleGetTransHistory(accNumId).then(res => {
+      if (res.error === false) {
+        dispatch(fetchSuccess(res.response));
+      } else if (res.error === true) {
+        dispatch(fetchFailure(res.error));
+      }
+    });
+  };
+};
+
+

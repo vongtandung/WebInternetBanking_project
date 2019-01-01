@@ -2,8 +2,13 @@ import React, { Component } from "react";
 import "./UserAcc.css";
 import accContactIco from "../../../../assets/images/ico/acc-contact-ico.png";
 import label from "../../../../assets/images/pic/label.png";
+import WebService from "../../../../utilities/WebServices";
 
 class UserAcc extends Component {
+  constructor(){
+    super();
+    this.webService = new WebService();
+  }
   componentWillMount() {
     this.handleRoute(true);
   }

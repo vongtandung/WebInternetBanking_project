@@ -1,19 +1,54 @@
 import React, { Component } from "react";
 import "./UserPaymentList.css";
+import { connect } from "react-redux";
+import * as actions from "../../../../actions";
+import WebService from "../../../../utilities/WebServices";
 import accPayListIco from "../../../../assets/images/ico/acc-paylist-ico.png";
 import label from "../../../../assets/images/pic/label.png";
+import spinner from "../../../../assets/images/ico/spinner.svg";
 
 class UserPaymentList extends Component {
+  constructor() {
+    super();
+    this.state = {
+      accPaySel: null
+    };
+    this.webService = new WebService();
+  }
   componentWillMount() {
     this.handleRoute(true);
   }
   componentWillUnmount() {
     this.handleRoute(false);
   }
+  componentDidMount() {
+    this.props.fetchUserAccData();
+  }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.userAcc !== this.props.userAcc) {
+      if (nextProps.userAcc.return_code === 1) {
+        this.setState({ accPaySel: nextProps.userAcc.data[0].balance });
+      } else if (nextProps.userAcc.return_code === -1) {
+        this.props.showPopup(nextProps.userAcc.return_mess, "", "error");
+      }
+      if (nextProps.userAcc.error === true) {
+        this.props.showPopup("Phiên của bạn đã hết hạn", "", "error");
+        this.webService.logout();
+        this.props.history.push("/login");
+      }
+    }
+  }
   handleRoute = value => {
     this.props.isRoute(value);
   };
+  handleAccPaySelChange = e => {
+    e.preventDefault();
+    this.setState({ accPaySel: e.target.value });
+  };
+
   render() {
+    const { loading, data, return_code } = this.props.userAcc;
+    const accPaySel = this.state.accPaySel;
     return (
       <div className="user-acc-payment">
         <div className="user-accpay-header">
@@ -37,14 +72,31 @@ class UserPaymentList extends Component {
                     htmlFor="accList"
                     className="col-form-label col-form-label-lg col-form-label-custom "
                   >
-                    Tài khoản nguồn
+                    Chọn tài khoản
                   </label>
                   <div className="col-form-input-custom">
-                    <select id="accList" className="form-control">
-                      <option defaultValue>Choose...</option>
-                      <option>...</option>
+                    <select
+                      id="accList"
+                      className="form-control"
+                      onChange={this.handleAccPaySelChange}
+                      defaultValue="Chọn số tài khoản của bạn"
+                    >
+                      {return_code === 1 && data && data.length > 0
+                        ? data.map((data, index) => {
+                            return (
+                              <option key={index} value={data.balance}>
+                                {data.accountNumber}
+                              </option>
+                            );
+                          })
+                        : null}
                     </select>
                   </div>
+                </div>
+                <div className="loading-spinner">
+                  {loading === true && (
+                    <img src={spinner} alt="" width="30px" height="30px" />
+                  )}
                 </div>
               </div>
             </div>
@@ -65,20 +117,7 @@ class UserPaymentList extends Component {
                   </label>
                   <div className="col-form-input-accpay-custom col-form-input-readonly">
                     <label className="col-form-label col-form-label-lg ">
-                      Lê Võ Hoàng Duy
-                    </label>
-                  </div>
-                </div>
-                <div className="form-block">
-                  <label
-                    htmlFor="accPayId"
-                    className="col-form-label col-form-label-lg col-form-label-custom col-form-label-accpay-custom"
-                  >
-                    Số tài khoản
-                  </label>
-                  <div className="col-form-input-accpay-custom col-form-input-readonly">
-                    <label className="col-form-label col-form-label-lg">
-                      0123123123
+                      {this.webService.getName()}
                     </label>
                   </div>
                 </div>
@@ -91,7 +130,7 @@ class UserPaymentList extends Component {
                   </label>
                   <div className="col-form-input-accpay-custom col-form-input-readonly">
                     <label className="col-form-label col-form-label-lg ">
-                      123132132 &#8363;
+                      {accPaySel} &#8363;
                     </label>
                   </div>
                 </div>
@@ -104,7 +143,7 @@ class UserPaymentList extends Component {
                   </label>
                   <div className="col-form-input-accpay-custom col-form-input-readonly">
                     <label className="col-form-label col-form-label-lg ">
-                      123132132 &#8363;
+                      {accPaySel} &#8363;
                     </label>
                   </div>
                 </div>
@@ -117,4 +156,11 @@ class UserPaymentList extends Component {
   }
 }
 
-export default UserPaymentList;
+const mapStateToProps = state => ({
+  userAcc: state.userAcc
+});
+
+export default connect(
+  mapStateToProps,
+  actions
+)(UserPaymentList);

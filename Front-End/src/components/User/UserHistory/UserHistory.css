@@ -40,6 +40,25 @@
   border: 2px solid black;
 }
 
+.user-history-table-custom{
+  border-top: none !important;
+  padding: 0em !important
+}
+
+.user-history-table-border{
+  border-top: 2px solid rgb(255, 208, 0);
+}
+
+
+.user-history-table-tr{
+  border-top: 2px solid white;
+}
+
+.user-history-table-th{
+  border-top: none!important;
+  color: darkred;
+}
+
 thead,
 tbody tr {
   display: table;
@@ -47,14 +66,20 @@ tbody tr {
   table-layout: fixed; /* even columns width , fix width of table too*/
 }
 
+tbody tr td {
+  vertical-align: middle!important;
+  word-break:break-all;
+}
+
 .table-scroll {
   display: block;
   height: 150px;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .table-scroll::-webkit-scrollbar {
-  width: 0.4em;
+  width: 0.3em;
 }
 .table-scroll::-webkit-scrollbar-thumb {
   background: -webkit-linear-gradient(

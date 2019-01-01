@@ -10,19 +10,22 @@
   border-top-left-radius: 5px;
 }
 
-.form-user-inf-contact{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border-radius: 5px;
-    border: 2px solid black;
+.form-user-inf-contact {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  border: 2px solid black;
 }
-
 
 .user-contact-body {
   padding-right: 15px;
   padding-left: 15px;
+}
+
+.user-contact-edit-block{
+  margin: 0.5em;
 }
 
 .col-form-input-contact-custom {
@@ -34,14 +37,23 @@
   color: darkred;
 }
 
-.bd-example{
-    width: 100%;
-    position: relative;
-    padding: 1rem;
-    margin: 1rem -15px 0;
-    border-width: .2rem 0 0;
+.bd-example {
+  width: 100%;
+  position: relative;
+  padding: 1rem;
+  margin: 1rem -15px 0;
+  border-width: 0.2rem 0 0;
 }
 
-.contact-list-label{
-    color: darkred;
+.contact-list-label {
+  color: darkred;
+}
+
+.user-contact-btn {
+  padding-top: 1em;
+}
+
+.btn-table-contact {
+  margin-left: 0.1em;
+  margin-right: 0.1em;
 }

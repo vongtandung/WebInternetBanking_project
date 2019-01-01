@@ -57,7 +57,7 @@ router.post("/transfer", (req, res) => {
     var period = date - row[0].time;
     var sendAmount = req.body.amount,
       reciveAmount = req.body.amount;
-    if (row[0].otpnum == req.body.otp && period > 300000) {
+    if (row[0].otpnum === req.body.otp && period < 300000) {
       if (req.body.fee == 1) {
         reciveAmount -= TRANS_FEE;
       } else {
@@ -127,7 +127,7 @@ router.post("/transfer", (req, res) => {
 });
 router.post("/gettranshistory", (req, res) => {
   bankingRepo
-    .getTransHistory(req.body.userId)
+    .getTransHistory(req.body.accountNumber)
     .then(row => {
       res.json({ return_code: 1, return_mess: "success", data: row });
     })
@@ -164,6 +164,7 @@ router.post("/deletepaymentaccount", (req, res) => {
   });
 });
 router.post("/send", async function(req, res) {
+  console.log("ok");
   response = {
     name: req.body.name,
     email: "lovemoneybanking@gmail.com"
@@ -212,7 +213,9 @@ router.post("/getreciverlist", (req, res) => {
         data: row
       });
     })
-    .catch(res.end(res.json({ return_code: -1, return_mess: "fail" })));
+    .catch(err => {
+      res.end(res.json({ return_code: -1, return_mess: "fail" }));
+    });
 });
 router.post("/savenewreciver", (req, res) => {
   bankingRepo
@@ -232,7 +235,7 @@ router.post("/deleteinreciverlist", (req, res) => {
     .deleteinreciverlist(req.body.userId, req.body.accountNumber)
     .then(res.json({ return_code: 1, return_mess: "deleted" }))
     .catch(err => {
-      res.json({ return_code: -1, return_mess: "delete fail" })
+      res.json({ return_code: -1, return_mess: "delete fail" });
     });
 });
 module.exports = router;
