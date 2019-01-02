@@ -127,6 +127,7 @@
   display: flex;
   flex: 1;
   justify-content: flex-start;
+  align-items: center;
   margin-left: 0.5em;
   margin-right: 0.5em;
 }
@@ -161,10 +162,18 @@
   margin-top: 0;
 }
 
-/* User Inf Img */
+/* User Inf */
 .user-inf-img {
   display: flex;
   align-items: center;
+}
+
+.user-inf-content{
+  color: white;
+  text-align: left;
+  font-size: 0.8em;
+  margin-left: 0.5em;
+  margin-right: 0.5em;
 }
 
 .user-inf-img img {
@@ -179,15 +188,20 @@
 .icon-status {
   position: absolute;
   border: 1px solid #3f4257;
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
   border-radius: 100%;
-  display: inline-block;
-  margin-top: -0.7em;
+  margin-top: 0.5em;
+  margin-left: -2.7em;
 }
 
 .icon-status.online {
   background-color: #32e4cd;
+}
+
+.inline-items>* {
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .btn-user-label {

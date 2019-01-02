@@ -18,7 +18,7 @@ router.post('/login',(req,res)=>{
                 .then(value => {
                     res.json({
                         "return_code":1,
-                        "return_mess":"lofin success",
+                        "return_mess":"login success",
                         "data":{
                         auth: true,
                         id: userEntity.id,

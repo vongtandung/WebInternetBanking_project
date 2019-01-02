@@ -11,9 +11,10 @@ class UserAcc extends Component {
     super();
     this.state = {
       accDesList: [],
+      accDesSel: null,
       accNum: null,
       accBalance: null,
-      modalOpen: ""
+      modalOpen: false
     };
     this.webService = new WebService();
   }
@@ -43,6 +44,16 @@ class UserAcc extends Component {
   handleRoute = value => {
     this.props.isRoute(value);
   };
+  handleDelPaymentAccApi = accountNumber => {
+    this.webService.delAccPayment(accountNumber)
+    .then (res => {
+      if (res.return_code === 1){
+        this.props.showPopup("Đóng tài khoản thành công", "", "success");
+      } else if (res.return_code === -1){
+        this.props.showPopup("Đóng tài khoản thất bại", "", "error");
+      }
+    })
+  } 
   handleFilterAccClose = accountNumSel => {
     let accDesList = [...this.props.userAcc.data];
     accDesList = accDesList.filter((data, index) => {
@@ -50,27 +61,36 @@ class UserAcc extends Component {
     });
     this.setState({ accDesList: accDesList });
   };
+  handleFormCloseChange = (e) => {
+    if (e.target.value <=50000){
+      this.setState({ modalOpen: false });
+    } else {
+      this.setState({ modalOpen: true });
+    }
+  };
+  handleFormExchangeChange = (e) => {
+    this.setState({accDesSel: e.target.value});
+  };
   handleFormCloseAccSubmit = e => {
     e.preventDefault();
     let accountNumSelInd = e.nativeEvent.target.accCloseId.selectedIndex;
     let accountNumSel = e.nativeEvent.target.accCloseId[accountNumSelInd].text;
-    console.log(e.target.accCloseId.value)
     if (e.target.accCloseId.value === "") {
       this.props.showPopup("Vui lòng chọn số tài khoản", "", "error");
     } else {
       this.handleFilterAccClose(accountNumSel);
       this.refs.accCloseSrcEdit.value = accountNumSel;
-      if (e.target.accCloseId.value >= 50000) {
-        this.setState(
-          {
-            modalOpen: "modal"
-          },
-          () => {}
-        );
+      if (e.target.accCloseId.value <= 50000) {
+        this.handleDelPaymentAccApi(accountNumSel)
       } else {
+        this.setState({accDesSel:accountNumSel});
       }
     }
   };
+  teston= () =>{
+    console.log("ok")
+  }
+
   render() {
     const { data, return_code } = this.props.userAcc;
     const accDesList = this.state.accDesList;
@@ -108,7 +128,7 @@ class UserAcc extends Component {
                       ref="accCloseId"
                       id="accCloseId"
                       className="form-control"
-                      placeholder="asddda"
+                      onChange={this.handleFormCloseChange}
                     >
                       <option hidden value="">
                         Chọn số tài khoản
@@ -130,14 +150,23 @@ class UserAcc extends Component {
                   </div>
                 </div>
                 <div className="user-close-btn">
-                  <button
-                    type="submit"
-                    className="btn btn-acc"
-                    data-toggle="modal"
-                    data-target="#ModalEdit"
-                  >
-                    Đóng tài khoản
-                  </button>
+                  {modalOpen === true ? (
+                    <button
+                      type="submit"
+                      className="btn btn-acc"
+                      data-toggle="modal"
+                      data-target="#ModalEdit"
+                    >
+                      Đóng tài khoản
+                    </button>
+                  ) : (
+                    <button
+                      type="submit"
+                      className="btn btn-acc"
+                    >
+                      Đóng tài khoản
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
@@ -197,8 +226,8 @@ class UserAcc extends Component {
                               ref="accDesId"
                               id="accDesId"
                               className="form-control"
+                              onChange={this.handleFormExchangeChange}
                             >
-                              <option hidden>Chọn số tài khoản</option>
                               {accDesList.length > 0
                                 ? accDesList.map((data, index) => {
                                     return (
@@ -224,6 +253,7 @@ class UserAcc extends Component {
                     type="button"
                     className="btn btn-secondary"
                     data-dismiss="modal"
+                    onClick={this.teston}
                   >
                     Đóng
                   </button>

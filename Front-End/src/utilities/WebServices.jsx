@@ -177,6 +177,22 @@ export default class WebService {
       });
   }
 
+  delAccPayment(accountNumber){
+    const param = {
+      userId: this.getIdUser(),
+      accountNumber: accountNumber
+    };
+    // Get a token from api server using the fetch api
+    return this.fetchDataApi(`${this.apiDomain}/banking/deletepaymentaccount`, {
+      method: "POST",
+      json: true,
+      body: JSON.stringify(param)
+    }).then(res => {
+      console.log(res);
+      return res;
+    });
+  }
+
   ///////////////////////////////////////////////          OTHER FUNCTION          //////////////////////////////////////////////////////
   //Function Authen from login -----------------------------------------
   loggedIn() {
