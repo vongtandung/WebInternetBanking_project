@@ -65,7 +65,9 @@ class UserContact extends Component {
               } else {
                 this.props.showPopup("Cập nhật thành công", "", "success");
               }
-              this.handleGetContactApi();
+              setTimeout(() => {
+                this.handleGetContactApi();
+              }, 100);
             }
           );
         } else {
@@ -77,7 +79,9 @@ class UserContact extends Component {
     this.webService.delAccContact(accContactId).then(res => {
       if (res.return_code === 1) {
         this.props.showPopup("Đã xoá liên hệ", "", "success");
-        this.handleGetContactApi();
+        setTimeout(() => {
+          this.handleGetContactApi();
+        }, 100);
       } else if (res.return_code === -1) {
         this.props.showPopup("Không thể xoá liên hệ này", "", "error");
       }
