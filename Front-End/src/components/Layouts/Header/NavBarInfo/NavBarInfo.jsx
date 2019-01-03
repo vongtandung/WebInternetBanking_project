@@ -11,7 +11,7 @@ import avatar from "../../../../assets/images/pic/avartar-sp.jpg";
 import logo from "../../../../assets/images/pic/bank-logo.png";
 
 class NavBarInfo extends Component {
-  constructor(){
+  constructor() {
     super();
     this.webService = new WebService();
   }
@@ -52,43 +52,34 @@ class NavBarInfo extends Component {
                 </button>
               </div>
             </div>
-            <div className="user-inf inline-items">
+            <div className="user-inf user-option">
               <div className="user-inf-img">
                 <img src={avatar} alt="" />
                 <span className="icon-status online" />
-                <div class="more-dropdown more-with-triangle">
-						<div class="mCustomScrollbar ps ps--theme_default" data-mcs-theme="dark" data-ps-id="b4b06a41-8ecc-06cc-7f68-746321274b59">
-							<div class="ui-block-title ui-block-title-small">
-								<h6 class="title">Your Account</h6>
-							</div>
-
-							<ul class="account-settings">
-								<li>
-									<a href="29-YourAccount-AccountSettings.html">
-										<span>Profile Settings</span>
-									</a>
-								</li>
-								<li>
-									<a href="36-FavPage-SettingsAndCreatePopup.html">
-										<span>Create Fav Page</span>
-									</a>
-								</li>
-								<li>
-									<a href="#">
-										<span>Log Out</span>
-									</a>
-								</li>
-							</ul>
-</div>
-					</div>
-              </div>
-              <div class="user-inf-content">
-                <div class="author-title">
-                  {this.webService.getUserName()}
-                  <span></span>
                 </div>
-                <span class="author-subtitle">Số dư: 12311  </span>
-              </div>
+                <div class="user-inf-content">
+                  <div class="author-title">
+                    {this.webService.getUserName()}
+                    <span />
+                  </div>
+                  <span class="author-subtitle">Số dư: 12311 </span>
+                </div>
+                <div className="user-option">
+                    <ul class="user-option-dropdown more-with-triangle">
+                      <li>
+                        <a href="#">Edit Post</a>
+                      </li>
+                      <li>
+                        <a href="#">Delete Post</a>
+                      </li>
+                      <li>
+                        <a href="#">Turn Off Notifications</a>
+                      </li>
+                      <li>
+                        <a href="#">Select as Featured</a>
+                      </li>
+                    </ul>
+                  </div>
             </div>
           </div>
         </div>
