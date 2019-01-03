@@ -15,6 +15,9 @@ class NavBarInfo extends Component {
     super();
     this.webService = new WebService();
   }
+  componentDidMount() {
+
+  }
   render() {
     return (
       <div className="navbar-header">
@@ -56,30 +59,29 @@ class NavBarInfo extends Component {
               <div className="user-inf-img">
                 <img src={avatar} alt="" />
                 <span className="icon-status online" />
-                </div>
-                <div class="user-inf-content">
-                  <div class="author-title">
+              </div>
+              <div className="user-inf-content">
+                <div className="author-title">
+                  <span className="author-name">
                     {this.webService.getUserName()}
-                    <span />
-                  </div>
-                  <span class="author-subtitle">Số dư: 12311 </span>
+                  </span>
                 </div>
-                <div className="user-option">
-                    <ul class="user-option-dropdown more-with-triangle">
-                      <li>
-                        <a href="#">Edit Post</a>
-                      </li>
-                      <li>
-                        <a href="#">Delete Post</a>
-                      </li>
-                      <li>
-                        <a href="#">Turn Off Notifications</a>
-                      </li>
-                      <li>
-                        <a href="#">Select as Featured</a>
-                      </li>
-                    </ul>
-                  </div>
+                <span className="author-subtitle">
+                  Số dư: 123132312
+                </span>
+              </div>
+              <div className="user-inf-carpet">
+                <i className="fas fa-caret-down" style={{ color: "white" }} />
+              </div>
+              <div className="user-option">
+                <ul className="user-option-dropdown more-with-triangle">
+                  <li>
+                    <a href="/login" onClick={this.webService.logout()}>
+                      Đăng xuất
+                    </a>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
@@ -114,5 +116,6 @@ class NavBarInfo extends Component {
   }
   c;
 }
+
 
 export default NavBarInfo;
