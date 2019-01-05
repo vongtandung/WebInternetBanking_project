@@ -26,6 +26,7 @@ class UserSend extends Component {
   }
   componentWillMount() {
     this.handleRoute(true);
+    this.props.setTitle("Chuyển tiền");
   }
   componentWillUnmount() {
     this.handleRoute(false);

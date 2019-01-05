@@ -12,6 +12,14 @@ export const showPopup = (title, mess, type) => ({
 });
 export const closePopup = () => ({ type: actionTypes.POPUPCLOSE });
 
+//Set title action
+export const setTitle = (title) => ({
+  type: actionTypes.SETTITLE,
+  payload: {
+    title: title,
+  }
+});
+
 //Fetch API action
 export const fetchBegin = () => ({
   type: actionTypes.FETCH_BEGIN

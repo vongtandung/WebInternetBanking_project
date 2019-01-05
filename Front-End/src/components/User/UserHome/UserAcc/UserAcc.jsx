@@ -20,6 +20,7 @@ class UserAcc extends Component {
   }
   componentWillMount() {
     this.handleRoute(true);
+    this.props.setTitle("Đóng TK");
   }
   componentWillUnmount() {
     this.handleRoute(false);

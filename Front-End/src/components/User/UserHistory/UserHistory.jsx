@@ -20,6 +20,9 @@ class UserHistory extends Component {
     this.webService = new WebService();
     this.helper = new SystemHelper();
   }
+  componentWillMount(){
+    this.props.setTitle("Lịch sử");
+  }
   componentDidMount() {
     this.handleGetPayAccApi();
   }

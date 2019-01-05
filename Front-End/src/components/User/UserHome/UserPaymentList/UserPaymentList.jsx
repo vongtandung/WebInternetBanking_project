@@ -17,6 +17,7 @@ class UserPaymentList extends Component {
   }
   componentWillMount() {
     this.handleRoute(true);
+    this.props.setTitle("Tài khoản");
   }
   componentWillUnmount() {
     this.handleRoute(false);

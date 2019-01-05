@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import "./UserHome.css";
 import { NavLink, Route, Switch, Redirect } from "react-router-dom";
+import { connect } from "react-redux";
+import * as actions from "../../../actions";
 import UserPaymentList from "./UserPaymentList";
 import UserSend from "./UserSend";
 import UserContact from "./UserContact";
@@ -15,6 +17,9 @@ class UserHome extends Component {
   state = {
     isRoute: false
   };
+  componentWillMount(){
+    this.props.setTitle("Trang chủ")
+  }
   handleRoute = boolean => {
     this.setState({ isRoute: boolean });
   };
@@ -78,4 +83,7 @@ class UserHome extends Component {
   }
 }
 
-export default UserHome;
+export default connect(
+  null,
+  actions
+)(UserHome);

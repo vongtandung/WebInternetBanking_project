@@ -1,6 +1,9 @@
-// Aler popup
+// Alert popup
 export const POPUPSHOW = 'showPopup';
 export const POPUPCLOSE = 'closePopup';
+
+// Set title
+export const SETTITLE = 'setTitle';
 
 //Fetch API Life Circle
 export const FETCH_BEGIN   = 'FETCH_BEGIN';

@@ -128,19 +128,19 @@ export default class WebService {
     });
   }
 
-  getAccContact(){
+  getAccContact() {
     const param = {
-        userId: this.getIdUser(),
-      };
-      // Get a token from api server using the fetch api
-      return this.fetchDataApi(`${this.apiDomain}/banking/getreciverlist`, {
-        method: "POST",
-        json: true,
-        body: JSON.stringify(param)
-      }).then(res => {
-        console.log(res);
-        return res;
-      });
+      userId: this.getIdUser()
+    };
+    // Get a token from api server using the fetch api
+    return this.fetchDataApi(`${this.apiDomain}/banking/getreciverlist`, {
+      method: "POST",
+      json: true,
+      body: JSON.stringify(param)
+    }).then(res => {
+      console.log(res);
+      return res;
+    });
   }
 
   setAccContact(accountNumber, name, fullName) {
@@ -161,23 +161,23 @@ export default class WebService {
     });
   }
 
-  delAccContact(accountNumber){
+  delAccContact(accountNumber) {
     const param = {
-        userId: this.getIdUser(),
-        accountNumber: accountNumber
-      };
-      // Get a token from api server using the fetch api
-      return this.fetchDataApi(`${this.apiDomain}/banking/deleteinreciverlist`, {
-        method: "POST",
-        json: true,
-        body: JSON.stringify(param)
-      }).then(res => {
-        console.log(res);
-        return res;
-      });
+      userId: this.getIdUser(),
+      accountNumber: accountNumber
+    };
+    // Get a token from api server using the fetch api
+    return this.fetchDataApi(`${this.apiDomain}/banking/deleteinreciverlist`, {
+      method: "POST",
+      json: true,
+      body: JSON.stringify(param)
+    }).then(res => {
+      console.log(res);
+      return res;
+    });
   }
 
-  delAccPayment(accountNumber){
+  delAccPayment(accountNumber) {
     const param = {
       userId: this.getIdUser(),
       accountNumber: accountNumber

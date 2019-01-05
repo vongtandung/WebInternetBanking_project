@@ -15,6 +15,7 @@ import Error from "./components/Layouts/Error";
 import Popup from "./components/Layouts/Popup";
 import Login from "./components/Authen/Login";
 import User from "./components/User";
+import Staff from "./components/Staff";
 
 class App extends Component {
   constructor() {
@@ -35,6 +36,7 @@ class App extends Component {
             <Switch>
               <Route exact path="/" render={() => <Redirect to="/login" />} />
               <Route path="/user" render={props => <User {...props} isLogged={this.hideLayout} />} />
+              <Route path="/staff" render={props => <Staff {...props} isLogged={this.hideLayout} />} />
               <Route
                 exact
                 path="/login"

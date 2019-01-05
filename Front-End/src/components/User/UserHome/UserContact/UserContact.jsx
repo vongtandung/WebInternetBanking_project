@@ -23,6 +23,7 @@ class UserContact extends Component {
 
   componentWillMount() {
     this.handleRoute(true);
+    this.props.setTitle("Liên hệ");
   }
   componentWillUnmount() {
     this.handleRoute(false);

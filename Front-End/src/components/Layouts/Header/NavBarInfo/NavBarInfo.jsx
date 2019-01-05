@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import "./NavBarInfo.css";
 import { NavLink } from "react-router-dom";
+import { connect } from "react-redux";
 import WebService from "../../../../utilities/WebServices";
 import searchIco from "../../../../assets/images/ico/search-ico.png";
 import homeIco from "../../../../assets/images/ico/home-ico.png";
@@ -15,10 +16,12 @@ class NavBarInfo extends Component {
     super();
     this.webService = new WebService();
   }
-  componentDidMount() {
-
+  
+  handleLogoutOnClick = () =>{
+    this.webService.logout();
   }
   render() {
+    const {title} = this.props.pageTitle
     return (
       <div className="navbar-header">
         <div className="navbar-info">
@@ -28,7 +31,9 @@ class NavBarInfo extends Component {
                 <img src={logo} alt="" />
               </a>
             </div>
-            <div className="navbar-info-title">Newsfeed</div>
+            <div className="navbar-info-title">
+            <span className="navbar-info-title-child">{title}</span>
+            </div>
             <div className="navbar-info-search">
               <form method="post" className="navbar-search-form">
                 <input
@@ -76,7 +81,7 @@ class NavBarInfo extends Component {
               <div className="user-option">
                 <ul className="user-option-dropdown more-with-triangle">
                   <li>
-                    <a href="/login" onClick={this.webService.logout()}>
+                    <a href="/login" onClick={this.handleLogoutOnClick}>
                       Đăng xuất
                     </a>
                   </li>
@@ -117,5 +122,11 @@ class NavBarInfo extends Component {
   c;
 }
 
+const mapStateToProps = state => ({
+  pageTitle: state.pageTitle
+});
 
-export default NavBarInfo;
+export default connect(
+  mapStateToProps,
+  null
+)(NavBarInfo);
