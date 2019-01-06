@@ -56,7 +56,7 @@ CREATE TABLE `account` (
   `email` varchar(45) NOT NULL,
   `permission` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -65,7 +65,7 @@ CREATE TABLE `account` (
 
 LOCK TABLES `account` WRITE;
 /*!40000 ALTER TABLE `account` DISABLE KEYS */;
-INSERT INTO `account` VALUES (1,'a','4QrcOUm6Wau+VuBX8g+IPg==','0123456718','Nguyễn Thị Hà','hanguyen@gmail.com',1),(2,'b','4QrcOUm6Wau+VuBX8g+IPg==','0124356182','Tần Dũng','vongtandung@gmail.com',0),(3,'c','4QrcOUm6Wau+VuBX8g+IPg==','0378726312','Nguyễn lê Hồng Ngọc','ngochaha@gmail.com',0);
+INSERT INTO `account` VALUES (1,'a','4QrcOUm6Wau+VuBX8g+IPg==','0123456718','Nguyễn Thị Hà','hanguyen@gmail.com',1),(2,'b','4QrcOUm6Wau+VuBX8g+IPg==','0124356182','Tần Dũng','vongtandung@gmail.com',0),(3,'c','4QrcOUm6Wau+VuBX8g+IPg==','0378726312','Nguyễn lê Hồng Ngọc','ngochaha@gmail.com',0),(5,'asd','4QrcOUm6Wau+VuBX8g+IPg==','0129312312','Lê Duy','asd@gmail.com',0);
 /*!40000 ALTER TABLE `account` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -93,7 +93,7 @@ CREATE TABLE `paymentAccount` (
 
 LOCK TABLES `paymentAccount` WRITE;
 /*!40000 ALTER TABLE `paymentAccount` DISABLE KEYS */;
-INSERT INTO `paymentAccount` VALUES ('20181215104817205',2,858000),('20181215122731832',2,3546000),('20181215122731836',3,-98102000);
+INSERT INTO `paymentAccount` VALUES ('2018121512273183',2,50000),('20181215122731836',3,98102000),('2018121512273184',2,454000),('20190106211406812',2,50000);
 /*!40000 ALTER TABLE `paymentAccount` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -108,6 +108,7 @@ CREATE TABLE `reciverList` (
   `userId` int(11) NOT NULL,
   `accountNumber` varchar(45) NOT NULL,
   `name` text NOT NULL,
+  `fullName` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`userId`,`accountNumber`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -145,7 +146,7 @@ CREATE TABLE `transactionHistory` (
 
 LOCK TABLES `transactionHistory` WRITE;
 /*!40000 ALTER TABLE `transactionHistory` DISABLE KEYS */;
-INSERT INTO `transactionHistory` VALUES ('181215141002527','20181215104817205','Nhận 750000 từ Nguyễn Lê Hồng Ngọc','+750000','hello','2018/12/15 14:10:02:527'),('181225133307662','20181215122731832','Chuyển 5000 cho Nguyễn Lê Hồng Ngọc','-5000','hello','2018/12/25 13:33:07:662'),('181229231519678','20181215122731836','Chuyển 5000 đến Lê Hồng Ngọc','-5000','hello','2018/12/29 23:15:19:678'),('181229231519679','20181215104817205','Nhận 5000 từ Tần Dũng','+5000','hello','2018/12/29 23:15:19:679'),('20181215122731832','20181215122731832','Nạp vào tài khoản 750000','+750000','hello','2018/12/15 14:23:11:727');
+INSERT INTO `transactionHistory` VALUES ('181215141002527','2018121512273184','Nhận 750000 từ Nguyễn Lê Hồng Ngọc','+750000','hello','2018/01/15 14:10:02:527'),('181225133307662','20181215122731832','Chuyển 5000 cho Nguyễn Lê Hồng Ngọc','-5000','hello','2018/12/25 13:33:07:662'),('181229231519678','2018121512273184','Chuyển 5000 đến Lê Hồng Ngọc','-5000','hello','2018/12/29 23:15:19:678'),('181229231519679','20181215104817205','Nhận 5000 từ Tần Dũng','+5000','hello','2018/12/29 23:15:19:679'),('190106170925431','2018121512273184','Chuyển 152000 đến ','-152000','undefined','2019/01/06 17:09:25:431'),('190106170925432','2018121512273184','Nhận 152000 từ Tài Khoản Bị Xóa','+152000','undefined','2019/01/06 17:09:25:432');
 /*!40000 ALTER TABLE `transactionHistory` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -170,7 +171,7 @@ CREATE TABLE `userRefreshTokenExt` (
 
 LOCK TABLES `userRefreshTokenExt` WRITE;
 /*!40000 ALTER TABLE `userRefreshTokenExt` DISABLE KEYS */;
-INSERT INTO `userRefreshTokenExt` VALUES (1,'DHyyzsgyrnlDNc8lECl4xy6X7i3duikm3laPivCpuZ1b8HiQYTciJGhCRjUT4pr5SO13KNuo9TtDgZCr','2018-12-14 16:32:38'),(2,'yZ31YvRZvkITg56hd1CiXfIV2a2WTa2z5EZ2EsqTcWCa5lCaGNR7cz30xVaFOlEbw2OCBk3HgVbGzPgw','2018-12-29 16:43:02');
+INSERT INTO `userRefreshTokenExt` VALUES (1,'k9TOnCFuR5e3gikWGhtPzfyro553ZbzgGBdlK6pFprZFoSdnLttLjT8iw2e7Vtcw703xRrkseyq8eFTI','2019-01-06 19:56:57'),(2,'TDmvc8qHoXngfPKjHLBhnbWpX5BckSxQ6c3yEZXOKCLacgRa7Q59JNgURwLDExHYZTqb2xX2UOhVAGlb','2019-01-06 19:28:15');
 /*!40000 ALTER TABLE `userRefreshTokenExt` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -183,4 +184,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-12-29 23:33:59
+-- Dump completed on 2019-01-06 21:16:05
