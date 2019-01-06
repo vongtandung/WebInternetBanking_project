@@ -5,7 +5,7 @@ var moment = require("moment");
 var db = require("../fn/mysql-db");
 
 const SECRET = "ABCDEF";
-const AC_LIFETIME = 3600;
+const AC_LIFETIME = 600;
 
 exports.generateAccessToken = userEntity => {
   var payload = {

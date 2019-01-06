@@ -125,11 +125,25 @@ router.post("/transfer", (req, res) => {
     }
   });
 });
+caculateDateTime = (date)=>{
+  const a = moment();
+  const b = moment(date, 'YYYY-MM-DD')
+  // Tính khoảng cách giữa hai ngày theo phút
+  var period = (a.diff(b, 'days'))
+  return period;
+}
 router.post("/gettranshistory", (req, res) => {
-  bankingRepo
+  bankingRepo 
     .getTransHistory(req.body.accountNumber)
     .then(row => {
-      res.json({ return_code: 1, return_mess: "success", data: row });
+      var result=[];
+      row.forEach(element => {
+        if(caculateDateTime(element.time)<=30)
+        {
+          result.push(element);
+        }    
+      });
+      res.json({ return_code: 1, return_mess: "success", data: result });
     })
     .catch(err => {
       console.log(err);
@@ -137,31 +151,33 @@ router.post("/gettranshistory", (req, res) => {
     });
 });
 router.post("/deletepaymentaccount", (req, res) => {
-  bankingRepo.countPaymentAccountOfUser(req.body.userId).then(row => {
-    if (row[0].count > 1) {
-      bankingRepo.getBalance(req.body.accountNumber).then(balance => {
-        if (balance[0].balance <= 0) {
-          bankingRepo
-            .deletePaymentAccount(req.body.accountNumber)
-            .then(res.json({ return_code: 1, return_mess: "delete success" }))
-            .catch(err => {
-              console.log(err);
-              res.json({ return_code: -1, return_mess: "delete fail" });
-            });
-        } else {
-          res.json({
-            return_mess: "Balnace is more than 0",
-            return_code: -1
-          });
-        }
-      });
-    } else {
-      res.json({
-        return_mess: "account have less than 1 payment account",
-        return_code: -1
-      });
-    }
-  });
+  bankingRepo
+    .getBalance(req.body.accountNumber)
+    .then(balance => {
+      bankingRepo.deletePaymentAccount(
+        req.body.accountNumber,
+        balance[0].balance,
+        req.body.reciveAccount
+      );
+      var reqs = {
+        amount: parseInt(balance[0].balance) - 50000- TRANS_FEE,
+        sendName: "Tài Khoản Bị Xóa",
+        reciveName: req.body.reciveAccount
+      };
+      if (parseInt(balance[0].balance) > 50000+ TRANS_FEE) {
+        bankingRepo.addBalance(
+          parseInt(balance[0].balance) - 50000- TRANS_FEE,
+          req.body.reciveAccount
+        );
+        bankingRepo.addTransHistory(req.body.accountNumber, reqs, 1);
+        bankingRepo.addTransHistory(req.body.reciveAccount, reqs, 0);
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      res.json({ return_code: -1, return_mess: "delete fail" });
+    });
+  res.json({ return_mess: "delete success", return_code: 1 });
 });
 router.post("/send", async function(req, res) {
   console.log("ok");

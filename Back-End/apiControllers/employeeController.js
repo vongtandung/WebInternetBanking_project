@@ -6,7 +6,21 @@ var express = require("express"),
 bankingRepo = require("../repos/bankingRepo");
 
 var router = express.Router();
-
+router.post("/getaccountinfobyphone", (req, res) => {
+  employeeRepo
+    .getAccountInfoByPhoneNumber(req.body.phone)
+    .then(row => {
+      if (row.length > 0) {
+        res.json({ return_code: 1, return_mess: "success", data: row });
+      } else {
+        res.json({ return_code: 1, return_mess: "empty" });
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      res.json({ return_code: -1, return_mess: "get fail" });
+    });
+});
 router.post("/createaccount", (req, res) => {
   employeeRepo
     .createAccount(req.body)
@@ -18,7 +32,7 @@ router.post("/createaccount", (req, res) => {
 });
 router.post("/createpaymentaccount", (req, res) => {
   employeeRepo
-    .createPaymentAccount(req.body)
+    .createPaymentAccount(req.body.userId)
     .then(row => {
       if (row != null) {
         res.json({ return_code: 1, return_mess: "create success" });
@@ -26,6 +40,7 @@ router.post("/createpaymentaccount", (req, res) => {
     })
     .catch(err => {
       console.log("err when create new account");
+      console.log(err);
       res.json({ return_code: -1, return_mess: "create fail" });
     });
 });
@@ -35,7 +50,7 @@ router.post("/addbalance", (req, res) => {
     .then(row => {
       if (row != null) {
         bankingRepo
-          .addTranshistory(req.body.accountNumber,req.body,2)
+          .addTranshistory(req.body.accountNumber, req.body, 2)
           .then(
             res.json({ return_code: 1, return_mess: "add balance success" })
           );

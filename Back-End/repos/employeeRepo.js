@@ -7,10 +7,14 @@ exports.createAccount = acc => {
     var sql = `insert into account(userName,passWord,phone,name,email,permission) values('${acc.userName}','${md5_pwd}','${acc.phone}','${acc.name}','${acc.email}','0') `;// 0 in permission is user, accout create by employee default is 0
     return db.load(sql);
 }
-exports.createPaymentAccount = acc => {
+exports.createPaymentAccount = userId => {
     var dt = dateTime.create();
     var accNum = dt.format('YmdHMSN');
-    var sql = `insert into paymentAccount(accountNumber,userId, balance) values('${accNum}',${acc.userId},${acc.balance})`;
+    var sql = `insert into paymentAccount(accountNumber,userId, balance) values('${accNum}',${userId}, 50000)`;
+    return db.load(sql);
+}
+exports.getAccountInfoByPhoneNumber = phone =>{
+    var sql= `select * from account where phone = '${phone}'`
     return db.load(sql);
 }
 exports.addBalance = acc => {

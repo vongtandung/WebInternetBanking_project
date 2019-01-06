@@ -46,6 +46,7 @@ exports.addTransHistory = (acc, req, type) => {
   }','${time}')`;
   return db.insert(sql);
 };
+
 exports.getTransHistory = accountNumber => {
   var sql = `select * from transactionHistory, paymentAccount where paymentAccount.accountNumber = '${accountNumber}' and transactionHistory.account = paymentAccount.accountNumber order by time`;
   return db.load(sql);
@@ -58,9 +59,27 @@ exports.getBalance = accountNumber => {
   var sql = `select balance from paymentAccount where accountNumber =${accountNumber}`;
   return db.load(sql);
 };
-exports.deletePaymentAccount = accountNumber => {
-  var sql = `delete from paymentAccount where accountNumber = ${accountNumber}`;
-  return db.load(sql);
+exports.deletePaymentAccount = (accountNumber, balance, reciveAccount) => {
+  return new Promise((resolve, reject) => {
+    if(reciveAccount != "" || reciveAccount === null)
+    {
+    var sql = `update paymentAccount set paymentAccount.balance = paymentAccount.balance + ${balance} where accountNumber = '${reciveAccount}'`;
+    db.load(sql)
+      .then(() => {
+        sql = `delete from paymentAccount where accountNumber = ${accountNumber}`;
+        console.log(accountNumber);
+        return db.insert(sql);
+      })
+      .then(r => resolve(r))
+      .catch(err => reject(err));
+    }
+    else{
+     var sql = `delete from paymentAccount where accountNumber = ${accountNumber}`;
+        console.log(accountNumber);
+        return db.insert(sql);
+    }
+  });
+
 };
 exports.otp = (email, otp, time) => {
   return new Promise((resolve, reject) => {
