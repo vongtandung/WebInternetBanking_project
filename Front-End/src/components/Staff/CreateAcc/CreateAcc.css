@@ -1,0 +1,21 @@
+.staff-create-acc{
+    background: white;
+    min-height: calc(100vh - 200px);
+    height: auto;
+    color: white;
+    box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+}
+
+.staff-create-header{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 150px;
+    background:linear-gradient(0deg,rgba(0, 0, 0, 0.733),rgba(255, 187, 0, 0.37)),url("../../../assets/images/pic/bg-01.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}

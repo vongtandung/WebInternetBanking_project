@@ -1,3 +1,19 @@
 .float-right {
     float: right;
 }
+
+
+.navbar-brand{
+    display: flex;
+    align-items: center;
+}
+.navbar-brand img {
+    width: 2.0em;
+    height: auto;
+}
+.navbar-brand span {
+    color:  lightyellow;
+    font-size: 1.5em;
+    padding-left: 1em;
+    padding-right: 1em;
+}
