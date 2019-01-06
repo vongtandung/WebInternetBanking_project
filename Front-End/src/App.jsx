@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Provider } from 'react-redux';
+import { Provider } from "react-redux";
 
 import {
   BrowserRouter as Router,
@@ -7,7 +7,8 @@ import {
   Switch,
   Redirect
 } from "react-router-dom";
-import store from './store';
+import store from "./store";
+import WebService from "./utilities/WebServices";
 import "./App.css";
 
 import Header from "./components/Layouts/Header";
@@ -23,11 +24,14 @@ class App extends Component {
     this.state = {
       isLogged: false
     };
+    this.webService = new WebService();
   }
   hideLayout = value => {
     this.setState({ isLogged: value });
   };
   render() {
+    const isAdmin = this.webService.isAdminPermiss();
+    const isUser = this.webService.isUserPermiss();
     return (
       <Provider store={store}>
         <Router>
@@ -35,16 +39,34 @@ class App extends Component {
             {this.state.isLogged ? null : <Header />}
             <Switch>
               <Route exact path="/" render={() => <Redirect to="/login" />} />
-              <Route path="/user" render={props => <User {...props} isLogged={this.hideLayout} />} />
-              <Route path="/staff" render={props => <Staff {...props} isLogged={this.hideLayout} />} />
+              {isAdmin ? (
+                <Route
+                  path="/staff"
+                  render={props => (
+                    <Staff {...props} isLogged={this.hideLayout} />
+                  )}
+                />
+              ) : null}
+              {isUser ? (
+                <Route
+                  path="/user"
+                  render={props => (
+                    <User {...props} isLogged={this.hideLayout} />
+                  )}
+                />
+              ) : null}
               <Route
                 exact
                 path="/login"
-                render={props => <Login {...props} isLogged={this.hideLayout} />}
+                render={props => (
+                  <Login {...props} isLogged={this.hideLayout} />
+                )}
               />
               <Route
                 exact
-                render={props => <Error {...props} isLogged={this.hideLayout} />}
+                render={props => (
+                  <Error {...props} isLogged={this.hideLayout} />
+                )}
               />
             </Switch>
             <Popup />

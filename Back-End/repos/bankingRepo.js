@@ -37,8 +37,8 @@ exports.addTransHistory = (acc, req, type) => {
       stt = "Chuyển " + req.amount + " đến " + req.reciveName;
       amount = "-" + req.amount;
     } else {
-      stt = "Chuyển " + req.amount + " vào tài khoản ";
-      amount = "+" + req.amount;
+      stt = "Chuyển " + req.plus + " vào tài khoản ";
+      amount = "+" + req.plus;
     }
   }
   var sql = `insert into transactionHistory values('${transId}','${acc}','${stt}', '${amount}','${

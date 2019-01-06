@@ -35,6 +35,21 @@ export const fetchFailure = error => ({
   payload: { error }
 });
 
+export const fetchAccPayBegin = () => ({
+  type: actionTypes.FETCH_ACC_BEGIN
+});
+
+export const fetchAccPaySuccess = response => ({
+  type: actionTypes.FETCH_ACC_SUCCESS,
+  payload: { response }
+});
+
+export const fetchAccPayFailure = error => ({
+  type: actionTypes.FETCH_ACC_FAILURE,
+  payload: { error }
+});
+
+
 export const fetchUserAccData = () => {
   return dispatch => {
     dispatch(fetchBegin());
@@ -78,3 +93,17 @@ export const fetchUserByPhoneData = (phone) => {
     });
   };
 };
+
+export const fetchUserByAccPayData = (accountNumber) => {
+  return dispatch => {
+    dispatch(fetchAccPayBegin());
+    apiFunc.handdleGetInfoByAccPay(accountNumber).then(res => {
+      if (res.error === false) {
+        dispatch(fetchAccPaySuccess(res.response));
+      } else if (res.error === true) {
+        dispatch(fetchAccPayFailure(res.error));
+      }
+    });
+  };
+};
+

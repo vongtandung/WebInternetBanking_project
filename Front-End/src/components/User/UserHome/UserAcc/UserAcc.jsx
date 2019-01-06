@@ -46,48 +46,60 @@ class UserAcc extends Component {
     this.props.isRoute(value);
   };
   handleDelPaymentAccApi = (accountNumber, reciveAccount) => {
-    this.webService.delAccPayment(accountNumber, reciveAccount)
+    this.webService
+      .delAccPayment(accountNumber, reciveAccount)
       .then(res => {
         if (res.return_code === 1) {
+          if (reciveAccount !== "") {
+            this.refs.accDesId.disabled = true;
+            this.refs.btnExchange.disabled = true;
+          }
           this.props.showPopup("Đóng tài khoản thành công", "", "success");
-          this.refs.accDesId.disabled = true;
-          this.refs.btnExchange.disabled = true;
-          this.props.fetchUserAccData();
+          setTimeout(() => {
+            this.props.fetchUserAccData();
+          }, 100);
         } else if (res.return_code === -1) {
           this.props.showPopup("Đóng tài khoản thất bại", "", "error");
         }
-      }).catch((error) => {
+      })
+      .catch(error => {
         if (error === 401) {
-          this.webService.renewToken()
+          this.webService
+            .renewToken()
             .then(res => {
-              this.webService.updateToken(res.access_token)
-              this.handleDelPaymentAccApi(accountNumber, reciveAccount)
-            }).catch((error) => {
-              this.webService.logout();
-              this.props.history.push('/login')
+              this.webService.updateToken(res.access_token);
+              this.handleDelPaymentAccApi(accountNumber, reciveAccount);
             })
+            .catch(error => {
+              this.webService.logout();
+              this.props.history.push("/login");
+            });
         } else if (error === 403) {
-          this.webService.logout()
-          this.props.push('/login')
-          return
+          this.webService.logout();
+          this.props.push("/login");
+          return;
         }
       });
-  }
+  };
   handleFilterAccClose = accountNumSel => {
     let accDesList = [...this.props.userAcc.data];
     accDesList = accDesList.filter((data, index) => {
       return data.accountNumber !== accountNumSel;
     });
-    this.setState({ accDesList: accDesList, accDesSel: accDesList[0].accountNumber });
+    this.setState({
+      accDesList: accDesList,
+      accDesSel: accDesList[0].accountNumber
+    });
   };
-  handleFormCloseChange = (e) => {
+  handleFormCloseChange = e => {
+    this.setState({accBalance: e.target.value});
     if (e.target.value <= 50000 || this.props.userAcc.data.length <= 1) {
       this.setState({ modalOpen: false });
     } else {
       this.setState({ modalOpen: true });
     }
   };
-  handleFormExchangeChange = (e) => {
+  handleFormExchangeChange = e => {
     this.setState({ accDesSel: e.target.value });
   };
   handleFormCloseAccSubmit = e => {
@@ -101,7 +113,7 @@ class UserAcc extends Component {
     } else {
       this.refs.accCloseSrcEdit.value = accountNumSel;
       if (e.target.accCloseId.value <= 50000) {
-        this.handleDelPaymentAccApi(accountNumSel, "")
+        this.handleDelPaymentAccApi(accountNumSel, "");
       } else {
         this.handleFilterAccClose(accountNumSel);
       }
@@ -109,11 +121,15 @@ class UserAcc extends Component {
   };
   handleCloseFormEditSubmit = e => {
     e.preventDefault();
-    this.handleDelPaymentAccApi(this.refs.accCloseSrcEdit.value, this.state.accDesSel);
-  }
+    this.handleDelPaymentAccApi(
+      this.refs.accCloseSrcEdit.value,
+      this.state.accDesSel
+    );
+  };
 
   render() {
     const { data, return_code } = this.props.userAcc;
+    const accBalance= this.state.accBalance;
     const accDesList = this.state.accDesList;
     const modalOpen = this.state.modalOpen;
     return (
@@ -156,18 +172,31 @@ class UserAcc extends Component {
                       </option>
                       {return_code === 1 && data && data.length > 0
                         ? data.map((data, index) => {
-                          return (
-                            <option
-                              id={data.accountNumber}
-                              key={index}
-                              value={data.balance}
-                            >
-                              {data.accountNumber}
-                            </option>
-                          );
-                        })
+                            return (
+                              <option
+                                id={data.accountNumber}
+                                key={index}
+                                value={data.balance}
+                              >
+                                {data.accountNumber}
+                              </option>
+                            );
+                          })
                         : null}
                     </select>
+                  </div>
+                </div>
+                <div className="form-block">
+                  <label
+                    htmlFor="accAmount"
+                    className="col-form-label col-form-label-lg col-form-label-custom"
+                  >
+                    Số dư khả dụng
+                  </label>
+                  <div className="col-form-input-custom col-form-input-readonly">
+                    <label className="col-form-label col-form-label-lg">
+                      {accBalance} &#8363;
+                    </label>
                   </div>
                 </div>
                 <div className="user-close-btn">
@@ -181,13 +210,10 @@ class UserAcc extends Component {
                       Đóng tài khoản
                     </button>
                   ) : (
-                      <button
-                        type="submit"
-                        className="btn btn-acc"
-                      >
-                        Đóng tài khoản
+                    <button type="submit" className="btn btn-acc">
+                      Đóng tài khoản
                     </button>
-                    )}
+                  )}
                 </div>
               </div>
             </div>
@@ -218,8 +244,9 @@ class UserAcc extends Component {
                       onSubmit={this.handleCloseFormEditSubmit}
                     >
                       <div className="form-group form-user-inf">
-                        <div className="notice" style={{ "color": "red" }}>
-                          *Bạn vui lòng chuyển số dư khả dụng sang một tài khoản khác
+                        <div className="notice" style={{ color: "red" }}>
+                          *Bạn vui lòng chuyển số dư khả dụng sang một tài khoản
+                          khác
                         </div>
                         <div className="form-block user-contact-edit-block">
                           <label
@@ -255,16 +282,16 @@ class UserAcc extends Component {
                             >
                               {accDesList.length > 0
                                 ? accDesList.map((data, index) => {
-                                  return (
-                                    <option
-                                      id={data.accountNumber}
-                                      key={index}
-                                      value={data.accountNumber}
-                                    >
-                                      {data.accountNumber}
-                                    </option>
-                                  );
-                                })
+                                    return (
+                                      <option
+                                        id={data.accountNumber}
+                                        key={index}
+                                        value={data.accountNumber}
+                                      >
+                                        {data.accountNumber}
+                                      </option>
+                                    );
+                                  })
                                 : null}
                             </select>
                           </div>

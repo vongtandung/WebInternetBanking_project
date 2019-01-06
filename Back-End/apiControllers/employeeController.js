@@ -3,7 +3,7 @@ var express = require("express"),
   low = require("lowdb"),
   fileSync = require("lowdb/adapters/FileSync"),
   employeeRepo = require("../repos/employeeRepo");
-bankingRepo = require("../repos/bankingRepo");
+  bankingRepo = require("../repos/bankingRepo");
 
 var router = express.Router();
 router.post("/getaccountinfobyphone", (req, res) => {
@@ -48,9 +48,10 @@ router.post("/addbalance", (req, res) => {
   employeeRepo
     .addBalance(req.body)
     .then(row => {
+      console.log(row)
       if (row != null) {
         bankingRepo
-          .addTranshistory(req.body.accountNumber, req.body, 2)
+          .addTransHistory(req.body.accountNumber, req.body, 2)
           .then(
             res.json({ return_code: 1, return_mess: "add balance success" })
           );

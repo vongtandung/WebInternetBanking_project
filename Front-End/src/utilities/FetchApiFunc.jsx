@@ -96,3 +96,35 @@ export const handdleGetInfoByPhone = phone => {
       }
     });
 };
+
+export const handdleGetInfoByAccPay = accountNumber => {
+  return webService
+    .getInfAcc(accountNumber)
+    .then(res => {
+      return {
+        error: false,
+        response: res
+      };
+    })
+    .catch(err => {
+      if (err === 401) {
+       return webService
+          .renewToken()
+          .then(res => {
+            webService.updateToken(res.access_token);
+           return handdleGetInfoByAccPay(accountNumber);
+          })
+          .catch(err1 => {
+            return {
+              error: true,
+              response: {}
+            };
+          });
+      } else if (err === 403) {
+        return {
+          error: true,
+          response: {}
+        };
+      }
+    });
+};

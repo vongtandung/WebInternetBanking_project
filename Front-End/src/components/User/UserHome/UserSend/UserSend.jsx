@@ -14,8 +14,10 @@ class UserSend extends Component {
     super();
     this.state = {
       accPayList: [],
+      accContactList: [],
       accNumSel: "",
       accPaySel: "",
+      accContactSel: false,
       accRecName: "",
       accRecExist: false,
       accMoneySend: null,
@@ -33,88 +35,166 @@ class UserSend extends Component {
   }
   componentDidMount(prevProps, prevState) {
     this.handleGetPayAccApi();
+    this.handleGetContactAccApi();
   }
   handleGetPayAccApi = () => {
     const self = this;
-    self.webService.getPaymentAcc().then(res => {
-      if (res.return_code === 1) {
-        self.setState({
-          accPayList: res.data,
-          accPaySel: res.data[0].balance
-        });
-      } else if (res.return_code === -1) {
-        self.props.showPopup(res.return_mess, "", "error");
-      }
-    }).catch((error) => {
-      if (error === 401) {
-        self.webService.renewToken()
-          .then(res => {
-            self.webService.updateToken(res.access_token)
-            self.handleGetPayAccApi()
-          }).catch((error) => {
-            self.webService.logout();
-            self.props.history.push('/login')
-          })
-      } else if (error === 403) {
-        self.webService.logout()
-        self.props.push('/login')
-        return
-      }
-    });
+    self.webService
+      .getPaymentAcc()
+      .then(res => {
+        if (res.return_code === 1) {
+          self.setState({
+            accPayList: res.data,
+            accPaySel: res.data[0].balance
+          });
+        } else if (res.return_code === -1) {
+          self.props.showPopup(res.return_mess, "", "error");
+        }
+      })
+      .catch(error => {
+        if (error === 401) {
+          self.webService
+            .renewToken()
+            .then(res => {
+              self.webService.updateToken(res.access_token);
+              self.handleGetPayAccApi();
+            })
+            .catch(error => {
+              self.webService.logout();
+              self.props.history.push("/login");
+            });
+        } else if (error === 403) {
+          self.webService.logout();
+          self.props.push("/login");
+          return;
+        }
+      });
+  };
+  handleGetContactAccApi = () => {
+    const self = this;
+    self.webService
+      .getAccContact()
+      .then(res => {
+        if (res.return_code === 1) {
+          self.setState({
+            accContactList: res.data
+          });
+        } else if (res.return_code === -1) {
+          self.props.showPopup(res.return_mess, "", "error");
+        }
+      })
+      .catch(error => {
+        if (error === 401) {
+          self.webService
+            .renewToken()
+            .then(res => {
+              self.webService.updateToken(res.access_token);
+              self.handleGetContactAccApi();
+            })
+            .catch(error => {
+              self.webService.logout();
+              self.props.history.push("/login");
+            });
+        } else if (error === 403) {
+          self.webService.logout();
+          self.props.push("/login");
+          return;
+        }
+      });
   };
   handleGetRevAccApi = accountNumber => {
     const self = this;
-    self.webService.getInfAcc(accountNumber).then(res => {
-      if (res.return_code === 1) {
-        self.setState({
-          accRecName: res.data[0].name,
-          accRecExist: true
-        });
-      } else if (res.return_code === -1) {
-        self.props.showPopup("Không tìm thấy số tài khoản", "", "error");
-      }
-    }).catch((error) => {
-      if (error === 401) {
-        self.webService.renewToken()
-          .then(res => {
-            self.webService.updateToken(res.access_token)
-            self.handleGetRevAccApi(accountNumber)
-          }).catch((error) => {
-            self.webService.logout();
-            self.props.history.push('/login')
-          })
-      } else if (error === 403) {
-        self.webService.logout()
-        self.props.push('/login')
-        return
-      }
-    });;
+    self.webService
+      .getInfAcc(accountNumber)
+      .then(res => {
+        if (res.return_code === 1) {
+          self.setState({
+            accRecName: res.data[0].name,
+            accRecExist: true
+          });
+        } else if (res.return_code === -1) {
+          self.props.showPopup("Không tìm thấy số tài khoản", "", "error");
+        }
+      })
+      .catch(error => {
+        if (error === 401) {
+          self.webService
+            .renewToken()
+            .then(res => {
+              self.webService.updateToken(res.access_token);
+              self.handleGetRevAccApi(accountNumber);
+            })
+            .catch(error => {
+              self.webService.logout();
+              self.props.history.push("/login");
+            });
+        } else if (error === 403) {
+          self.webService.logout();
+          self.props.push("/login");
+          return;
+        }
+      });
   };
   handleOptApi = accountNumber => {
     const self = this;
     self.setState({ accOtpReq: true }, () => {
-      self.webService.getOtpAccSend(accountNumber).then(res => {
-        if (res.return_code === 1) {
-        } else if (res.return_code === -1) {
-          self.props.showPopup("Error", "", "error");
+      self.webService
+        .getOtpAccSend(accountNumber)
+        .then(res => {
+          if (res.return_code === 1) {
+          } else if (res.return_code === -1) {
+            self.props.showPopup("Error", "", "error");
+          }
+        })
+        .catch(error => {
+          if (error === 401) {
+            self.webService
+              .renewToken()
+              .then(res => {
+                self.webService.updateToken(res.access_token);
+                self.handleOptApi(accountNumber);
+              })
+              .catch(error => {
+                self.webService.logout(accountNumber);
+                self.props.history.push("/login");
+              });
+          } else if (error === 403) {
+            self.webService.logout();
+            self.props.push("/login");
+            return;
+          }
+        });
+    });
+  };
+  handleAddContactApi = (accountNumber, name, fullName) => {
+    const self = this;
+    self
+      .setState({ accOtpReq: true }, () => {
+        self.webService.setAccContact(accountNumber).then(res => {
+          if (res.return_code === 1) {
+          } else if (res.return_code === -1) {
+            self.props.showPopup("Error", "", "error");
+          }
+        });
+      })
+      .catch(error => {
+        if (error === 401) {
+          self.webService
+            .renewToken()
+            .then(res => {
+              self.webService.updateToken(res.access_token);
+              self.handleAddContactApi(accountNumber, name, fullName);
+            })
+            .catch(error => {
+              self.webService.logout(accountNumber);
+              self.props.history.push("/login");
+            });
+        } else if (error === 403) {
+          self.webService.logout();
+          self.props.push("/login");
+          return;
         }
       });
-    }).catch((error) => {
-      if (error === 401) {
-        self.webService.renewToken()
-          .then(res => {
-            self.webService.updateToken(res.access_token)
-            self.handleOptApi(accountNumber)
-          }).catch((error) => {
-            self.webService.logout(accountNumber);
-            self.props.history.push('/login')
-          })
-      } else if (error === 403) {
-        self.webService.logout()
-        self.props.push('/login')
-        return
-      }
-    });;
   };
   handleMoneyTransferApi = (
     accSend,
@@ -123,85 +203,114 @@ class UserSend extends Component {
     note,
     otp,
     fee,
-    reciveName
+    reciveName,
+    accSave,
+    accSaveName
   ) => {
     const self = this;
-    self.setState({ accOtpReq: true }, () => {
-      self.webService
-        .getMoneyTransfer(accSend, accReci, amount, note, otp, fee, reciveName)
-        .then(res => {
-          if (res.return_code === 1) {
-            self.props.showPopup(
-              "Bạn đã chuyển tiền thành công",
-              "",
-              "success"
-            );
-            self.setState(
-              {
-                accPayList: [],
-                accNumSel: "",
-                accPaySel: "",
-                accRecName: "",
-                accRecExist: false,
-                accMoneySend: null,
-                accOtpReq: false
-              },
-              () => {
-                self.refs.accRevId.value = "";
-                self.handleGetPayAccApi();
+    self.webService
+      .getMoneyTransfer(accSend, accReci, amount, note, otp, fee, reciveName)
+      .then(res => {
+        if (res.return_code === 1) {
+          self.props.showPopup("Bạn đã chuyển tiền thành công", "", "success");
+          self.setState(
+            {
+              accPayList: [],
+              accNumSel: "",
+              accPaySel: "",
+              accRecName: "",
+              accRecExist: false,
+              accMoneySend: null,
+              accOtpReq: false
+            },
+            () => {
+              self.refs.accRevId.value = "";
+              if (accSave === true) {
+                self.handleAddContactApi(accReci, accSaveName, reciveName);
               }
-            );
-          } else if (res.return_code === -1) {
-            self.props.showPopup("Không tìm thấy số tài khoản", "", "error");
+              self.handleGetPayAccApi();
+            }
+          );
+        } else if (res.return_code === -1) {
+          if (res.return_mess === "Wrong OTP") {
+            self.props.showPopup("OPT không đúng", "", "error");
+          } else {
+            self.props.showPopup("Chuyển tiền không thành công", "", "error");
           }
-        });
-    }).catch((error) => {
-      if (error === 401) {
-        self.webService.renewToken()
-          .then(res => {
-            self.webService.updateToken(res.access_token)
-            self.handleMoneyTransferApi(
-              accSend,
-              accReci,
-              amount,
-              note,
-              otp,
-              fee,
-              reciveName
-            )
-          }).catch((error) => {
-            self.webService.logout();
-            self.props.history.push('/login')
-          })
-      } else if (error === 403) {
-        self.webService.logout()
-        self.props.push('/login')
-        return
-      }
-    });
+        }
+      })
+      .catch(error => {
+        if (error === 401) {
+          self.webService
+            .renewToken()
+            .then(res => {
+              self.webService.updateToken(res.access_token);
+              self.handleMoneyTransferApi(
+                accSend,
+                accReci,
+                amount,
+                note,
+                otp,
+                fee,
+                reciveName,
+                accSave,
+                accSaveName
+              );
+            })
+            .catch(error => {
+              self.webService.logout();
+              self.props.history.push("/login");
+            });
+        } else if (error === 403) {
+          self.webService.logout();
+          self.props.push("/login");
+          return;
+        }
+      });
   };
   handleRoute = value => {
     this.props.isRoute(value);
   };
   handleAccRevChange = e => {
     e.preventDefault();
-    if (e.target.value.length > 0 && e.target.value.length < 17) {
-      this.setState({
-        accRecName: "Đang tìm kiếm ...",
-        accRecExist: false
-      });
-    } else if (e.target.value.length === 0) {
-      this.setState({
-        accRecName: "",
-        accRecExist: false
-      });
-    } else if (e.target.value.length === 17) {
-      this.handleGetRevAccApi(e.target.value);
+    if (this.state.accContactSel === false) {
+      if (e.target.value.length > 0 && e.target.value.length < 17) {
+        this.setState({
+          accRecName: "Đang tìm kiếm ...",
+          accRecExist: false
+        });
+      } else if (e.target.value.length === 0) {
+        this.setState({
+          accRecName: "",
+          accRecExist: false
+        });
+      } else if (e.target.value.length === 17) {
+        this.handleGetRevAccApi(e.target.value);
+      }
     }
   };
   handleAccPaySelChange = e => {
     e.preventDefault();
     this.setState({ accPaySel: e.target.value });
+  };
+  handleAccContactSelChange = e => {
+    e.preventDefault();
+    if (e.target.value === "") {
+      this.setState({ accContactSel: false, accRecName: "" });
+      this.refs.accRevId.value = "";
+    } else {
+      let index = e.target.selectedIndex;
+      let optionElement = e.target.childNodes[index];
+      let option = optionElement.getAttribute("data-name");
+      this.setState({
+        accContactSel: true,
+        accRecName: option,
+        accRecExist: true
+      });
+      this.refs.accRevId.value = e.target.value;
+      this.refs.accRevSave.checked = false;
+      this.refs.accRevNameSave.value = "";
+    }
   };
   handleMoneySendChange = (e, maskedvalue, floatvalue) => {
     e.preventDefault();
@@ -221,7 +330,6 @@ class UserSend extends Component {
       if (validate.isValid === false) {
         this.props.showPopup(validate.mess, "", "error");
       } else {
-        console.log("ok");
         this.handleOptApi(accountNumSel);
       }
     } else {
@@ -232,7 +340,9 @@ class UserSend extends Component {
         e.target.accInfoSend.value,
         e.target.accOtpReq.value,
         e.target.accFeeSend.value,
-        e.target.accRevName.value
+        e.target.accRevName.value,
+        e.target.accRevSave.checked,
+        e.target.accRevNameSave.value
       );
     }
   };
@@ -246,6 +356,8 @@ class UserSend extends Component {
 
   render() {
     const accPayList = this.state.accPayList;
+    const accContactList = this.state.accContactList;
+    const accContactSel = this.state.accContactSel;
     const accPaySel = this.state.accPaySel;
     const accRecName = this.state.accRecName;
     const accMoneySend = this.state.accMoneySend;
@@ -285,12 +397,12 @@ class UserSend extends Component {
                     >
                       {accPayList.length > 0
                         ? accPayList.map((data, index) => {
-                          return (
-                            <option key={index} value={data.balance}>
-                              {data.accountNumber}
-                            </option>
-                          );
-                        })
+                            return (
+                              <option key={index} value={data.balance}>
+                                {data.accountNumber}
+                              </option>
+                            );
+                          })
                         : null}
                     </select>
                   </div>
@@ -330,9 +442,22 @@ class UserSend extends Component {
                       id="accRevList"
                       className="form-control"
                       disabled={accOtpReq}
+                      onChange={this.handleAccContactSelChange}
                     >
-                      <option defaultValue>Choose...</option>
-                      <option>...</option>
+                      <option value="">Chọn liên hệ có sẵn ...</option>
+                      {accContactList.length > 0
+                        ? accContactList.map((data, index) => {
+                            return (
+                              <option
+                                key={index}
+                                value={data.accountNumber}
+                                data-name={data.fullName}
+                              >
+                                {data.accountNumber} - {data.name}
+                              </option>
+                            );
+                          })
+                        : null}
                     </select>
                   </div>
                 </div>
@@ -351,7 +476,7 @@ class UserSend extends Component {
                       id="accRevId"
                       placeholder="Nhập số tài khoản"
                       maxLength="17"
-                      disabled={accOtpReq}
+                      disabled={accOtpReq || accContactSel}
                       onChange={this.handleAccRevChange}
                     />
                   </div>
@@ -369,7 +494,7 @@ class UserSend extends Component {
                       type="text"
                       className="form-control"
                       id="accRevName"
-                      disabled={accOtpReq}
+                      disabled={accOtpReq || accContactSel}
                       value={accRecName}
                       readOnly
                     />
@@ -384,10 +509,11 @@ class UserSend extends Component {
                   </label>
                   <div className="col-form-input-custom col-form-input-readonly">
                     <input
+                      ref="accRevSave"
                       type="checkbox"
                       className="form-control"
                       id="accRevSave"
-                      disabled={accOtpReq}
+                      disabled={accOtpReq || accContactSel}
                     />
                   </div>
                 </div>
@@ -400,10 +526,11 @@ class UserSend extends Component {
                   </label>
                   <div className="col-form-input-custom col-form-input-readonly">
                     <input
+                      ref="accRevNameSave"
                       type="text"
                       className="form-control"
                       id="accRevNameSave"
-                      disabled={accOtpReq}
+                      disabled={accOtpReq || accContactSel}
                     />
                   </div>
                 </div>

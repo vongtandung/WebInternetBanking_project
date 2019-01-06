@@ -1,13 +1,16 @@
 import React, { Component } from "react";
 import { NavLink, Route, Switch, Redirect } from "react-router-dom";
+import WebService from "../../utilities/WebServices";
+import WithAuth from "./../../utilities/WithAuth";
 import "./Staff.css";
 import HeaderStaff from "./HeaderStaff";
 import CreateAcc from "./CreateAcc";
 import ManageAcc from "./ManageAcc";
 
 class Staff extends Component {
-  componentWillMount() {
-    this.props.isLogged(true);
+  constructor() {
+    super();
+    this.webService = new WebService();
   }
   render() {
     return (
@@ -65,4 +68,4 @@ class Staff extends Component {
   }
 }
 
-export default Staff;
+export default WithAuth(Staff);

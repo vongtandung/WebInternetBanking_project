@@ -3,7 +3,7 @@ import decode from "jwt-decode";
 export default class WebService {
   // Initializing important variables
   constructor(domain) {
-    this.apiDomain = domain || "http://172.16.7.234:3001/api"; // API server domain
+    this.apiDomain = domain || "http://localhost:3001/api"; // API server domain
     this.fetchDataApi = this.fetchDataApi.bind(this); // React binding stuff
   }
 
@@ -217,6 +217,20 @@ export default class WebService {
       return res; 
     });
   }
+
+  rechargeAccpay(accountNumber,plus){
+    const param = {
+      accountNumber: accountNumber,
+      plus: plus
+    };
+    return this.fetchDataApi(`${this.apiDomain}/employee/addbalance`, {
+      method: "POST",
+      json: true,
+      body: JSON.stringify(param)
+    }).then(res => {
+      return res; 
+    });
+  }
   
   getAccInfoByPhone(phone){
     const param = {
@@ -231,7 +245,7 @@ export default class WebService {
     });
   }
 
-
+  
 
   ///////////////////////////////////////////////          OTHER FUNCTION          //////////////////////////////////////////////////////
   //Function Authen from login -----------------------------------------

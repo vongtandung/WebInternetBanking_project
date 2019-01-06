@@ -9,6 +9,9 @@ export const SETTITLE = 'setTitle';
 export const FETCH_BEGIN   = 'FETCH_BEGIN';
 export const FETCH_SUCCESS = 'FETCH_SUCCESS';
 export const FETCH_FAILURE = 'FETCH_FAILURE';
+export const FETCH_ACC_BEGIN   = 'FETCH_ACC_BEGIN';
+export const FETCH_ACC_SUCCESS = 'FETCH_ACC_SUCCESS';
+export const FETCH_ACC_FAILURE = 'FETCH_ACC_FAILURE';
 export const FETCH_INIT = 'FETCH_INIT';
 //Fetch API Life Circle
 export const FETCH_PAY_ACC = "getPayAcc";

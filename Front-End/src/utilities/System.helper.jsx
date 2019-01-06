@@ -4,7 +4,7 @@ export default class SystemHelper {
     let isValid = true;
     if (this.checkEmty(username) || this.checkEmty(password)) {
       isValid = false;
-      mess = "Bạn nhập chưa đúng username hoặc password"
+      mess = "Bạn chưa nhập username hoặc password"
     } else if (this.checkEmty(recapcha)) {
       isValid = false;
       mess = "Bạn vui lòng chứng minh không phải là robot"
