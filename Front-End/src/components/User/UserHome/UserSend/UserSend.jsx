@@ -45,6 +45,21 @@ class UserSend extends Component {
       } else if (res.return_code === -1) {
         self.props.showPopup(res.return_mess, "", "error");
       }
+    }).catch((error) => {
+      if (error === 401) {
+        self.webService.renewToken()
+          .then(res => {
+            self.webService.updateToken(res.access_token)
+            self.handleGetPayAccApi()
+          }).catch((error) => {
+            self.webService.logout();
+            self.props.history.push('/login')
+          })
+      } else if (error === 403) {
+        self.webService.logout()
+        self.props.push('/login')
+        return
+      }
     });
   };
   handleGetRevAccApi = accountNumber => {
@@ -58,7 +73,22 @@ class UserSend extends Component {
       } else if (res.return_code === -1) {
         self.props.showPopup("Không tìm thấy số tài khoản", "", "error");
       }
-    });
+    }).catch((error) => {
+      if (error === 401) {
+        self.webService.renewToken()
+          .then(res => {
+            self.webService.updateToken(res.access_token)
+            self.handleGetRevAccApi(accountNumber)
+          }).catch((error) => {
+            self.webService.logout();
+            self.props.history.push('/login')
+          })
+      } else if (error === 403) {
+        self.webService.logout()
+        self.props.push('/login')
+        return
+      }
+    });;
   };
   handleOptApi = accountNumber => {
     const self = this;
@@ -69,7 +99,22 @@ class UserSend extends Component {
           self.props.showPopup("Error", "", "error");
         }
       });
-    });
+    }).catch((error) => {
+      if (error === 401) {
+        self.webService.renewToken()
+          .then(res => {
+            self.webService.updateToken(res.access_token)
+            self.handleOptApi(accountNumber)
+          }).catch((error) => {
+            self.webService.logout(accountNumber);
+            self.props.history.push('/login')
+          })
+      } else if (error === 403) {
+        self.webService.logout()
+        self.props.push('/login')
+        return
+      }
+    });;
   };
   handleMoneyTransferApi = (
     accSend,
@@ -110,6 +155,29 @@ class UserSend extends Component {
             self.props.showPopup("Không tìm thấy số tài khoản", "", "error");
           }
         });
+    }).catch((error) => {
+      if (error === 401) {
+        self.webService.renewToken()
+          .then(res => {
+            self.webService.updateToken(res.access_token)
+            self.handleMoneyTransferApi(
+              accSend,
+              accReci,
+              amount,
+              note,
+              otp,
+              fee,
+              reciveName
+            )
+          }).catch((error) => {
+            self.webService.logout();
+            self.props.history.push('/login')
+          })
+      } else if (error === 403) {
+        self.webService.logout()
+        self.props.push('/login')
+        return
+      }
     });
   };
   handleRoute = value => {
@@ -217,12 +285,12 @@ class UserSend extends Component {
                     >
                       {accPayList.length > 0
                         ? accPayList.map((data, index) => {
-                            return (
-                              <option key={index} value={data.balance}>
-                                {data.accountNumber}
-                              </option>
-                            );
-                          })
+                          return (
+                            <option key={index} value={data.balance}>
+                              {data.accountNumber}
+                            </option>
+                          );
+                        })
                         : null}
                     </select>
                   </div>
@@ -236,7 +304,7 @@ class UserSend extends Component {
                   </label>
                   <div className="col-form-input-custom col-form-input-readonly">
                     <label className="col-form-label col-form-label-lg">
-                      {accPaySel}
+                      {accPaySel} &#8363;
                     </label>
                   </div>
                 </div>

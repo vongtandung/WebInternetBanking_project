@@ -43,6 +43,21 @@ class UserContact extends Component {
           this.props.showPopup(res.return_mess, "", "error");
         }
       }
+    }).catch((error) => {
+      if (error === 401) {
+        this.webService.renewToken()
+          .then(res => {
+            this.webService.updateToken(res.access_token)
+            this.handleGetContactApi(init)
+          }).catch((error) => {
+            this.webService.logout();
+            this.props.history.push('/login')
+          })
+      } else if (error === 403) {
+        this.webService.logout()
+        this.props.push('/login')
+        return
+      }
     });
   };
   handleSetContactApi = (
@@ -66,6 +81,7 @@ class UserContact extends Component {
               } else {
                 this.props.showPopup("Cập nhật thành công", "", "success");
               }
+              this.refs.accContactId.value = "";
               setTimeout(() => {
                 this.handleGetContactApi();
               }, 100);
@@ -73,6 +89,25 @@ class UserContact extends Component {
           );
         } else {
           this.props.showPopup(res.return_mess, "", "error");
+        }
+      }).catch((error) => {
+        if (error === 401) {
+          this.webService.renewToken()
+            .then(res => {
+              this.webService.updateToken(res.access_token)
+              this.handleSetContactApi(
+                accContactId,
+                accContactName,
+                accRevName,
+                isCreate)
+            }).catch((error) => {
+              this.webService.logout();
+              this.props.history.push('/login')
+            })
+        } else if (error === 403) {
+          this.webService.logout()
+          this.props.push('/login')
+          return
         }
       });
   };
@@ -86,6 +121,21 @@ class UserContact extends Component {
       } else if (res.return_code === -1) {
         this.props.showPopup("Không thể xoá liên hệ này", "", "error");
       }
+    }).catch((error) => {
+      if (error === 401) {
+        this.webService.renewToken()
+          .then(res => {
+            this.webService.updateToken(res.access_token)
+            this.handleDelContactApi(accContactId)
+          }).catch((error) => {
+            this.webService.logout();
+            this.props.history.push('/login')
+          })
+      } else if (error === 403) {
+        this.webService.logout()
+        this.props.push('/login')
+        return
+      }
     });
   };
   handleGetRevAccApi = accountNumber => {
@@ -98,6 +148,21 @@ class UserContact extends Component {
         });
       } else if (res.return_code === -1) {
         self.props.showPopup("Không tìm thấy số tài khoản", "", "error");
+      }
+    }).catch((error) => {
+      if (error === 401) {
+        this.webService.renewToken()
+          .then(res => {
+            this.webService.updateToken(res.access_token)
+            this.handleGetRevAccApi(accountNumber)
+          }).catch((error) => {
+            this.webService.logout();
+            this.props.history.push('/login')
+          })
+      } else if (error === 403) {
+        this.webService.logout()
+        this.props.push('/login')
+        return
       }
     });
   };
@@ -182,6 +247,7 @@ class UserContact extends Component {
                   </label>
                   <div className="col-form-input-custom">
                     <input
+                    ref="accContactId"
                       type="text"
                       className="form-control"
                       id="accContactId"

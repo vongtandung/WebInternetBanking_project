@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Redirect } from "react-router-dom";
 import AuthService from './WebServices';
 
 export default function withAuth(AuthComponent) {
@@ -31,13 +32,19 @@ export default function withAuth(AuthComponent) {
         }
 
         render() {
-            if (this.state.user) {
+            if (Auth.isUserPermiss() === true) {
                 return (
                     <AuthComponent />
                 )
+            } else if (Auth.isAdminPermiss() === true) {
+                return (
+                    <Redirect to="/staff" />
+                )
             }
             else {
-                return null
+                return(
+                    <Redirect to="/login" />
+                )
             }
         }
     };

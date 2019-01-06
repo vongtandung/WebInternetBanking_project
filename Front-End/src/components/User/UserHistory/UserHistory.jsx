@@ -20,8 +20,9 @@ class UserHistory extends Component {
     this.webService = new WebService();
     this.helper = new SystemHelper();
   }
-  componentWillMount(){
+  componentWillMount() {
     this.props.setTitle("Lịch sử");
+    this.props.fetchInitUserTransData();
   }
   componentDidMount() {
     this.handleGetPayAccApi();
@@ -48,6 +49,21 @@ class UserHistory extends Component {
       } else if (res.return_code === -1) {
         self.props.showPopup(res.return_mess, "", "error");
       }
+    }).catch((error) => {
+      if (error === 401) {
+        self.webService.renewToken()
+          .then(res => {
+            self.webService.updateToken(res.access_token)
+            self.handleGetPayAccApi()
+          }).catch((error) => {
+            self.webService.logout();
+            self.props.history.push('/login')
+          })
+      } else if (error === 403) {
+        self.webService.logout()
+        self.props.push('/login')
+        return
+      }
     });
   };
   handleGetTransHistoryApi = accountNumber => {
@@ -58,13 +74,32 @@ class UserHistory extends Component {
       } else if (res.return_code === -1) {
         self.props.showPopup(res.return_mess, "", "error");
       }
+    }).catch((error) => {
+      if (error === 401) {
+        self.webService.renewToken()
+          .then(res => {
+            self.webService.updateToken(res.access_token)
+            self.handleGetTransHistoryApi(accountNumber)
+          }).catch((error) => {
+            self.webService.logout();
+            self.props.history.push('/login')
+          })
+      } else if (error === 403) {
+        self.webService.logout()
+        self.props.push('/login')
+        return
+      }
     });
   };
   handleSubmitTransHistory = e => {
     e.preventDefault();
-    let accountNumSelInd = e.nativeEvent.target.accList.selectedIndex;
-    let accountNumSel = e.nativeEvent.target.accList[accountNumSelInd].text;
-    this.props.fetchUserTransData(accountNumSel);
+    if (e.target.accList.value === "") {
+      this.props.showPopup("Bạn chưa chọn số tài khoản", "", "error");
+    } else {
+      let accountNumSelInd = e.nativeEvent.target.accList.selectedIndex;
+      let accountNumSel = e.nativeEvent.target.accList[accountNumSelInd].text;
+      this.props.fetchUserTransData(accountNumSel);
+    }
   };
   handleMoreBtn = e => {
     console.log(e);
@@ -104,15 +139,15 @@ class UserHistory extends Component {
                       className="form-control"
                       title="All continents"
                     >
-                      <option hidden>Chọn số tài khoản</option>
+                      <option hidden value="">Chọn số tài khoản</option>
                       {accPayList.length > 0
                         ? accPayList.map((data, index) => {
-                            return (
-                              <option key={index} value={data.balance}>
-                                {data.accountNumber}
-                              </option>
-                            );
-                          })
+                          return (
+                            <option key={index} value={data.balance}>
+                              {data.accountNumber}
+                            </option>
+                          );
+                        })
                         : null}
                     </select>
                   </div>
@@ -175,58 +210,61 @@ class UserHistory extends Component {
                           </td>
                         )}
                       </tr>
+                      {return_code === 1 && accTransList && accTransList.length === 0 ?
+                        <tr>Tài khoản này chưa có giao dịch nào</tr> : null
+                      }
                       {return_code === 1 &&
-                      accTransList &&
-                      accTransList.length > 0
+                        accTransList &&
+                        accTransList.length > 0
                         ? accTransList.map((data, index) => {
-                            return (
-                              <tr key={index}   className="user-history-table-border">
-                                <td className="user-history-table-custom">
-                                  <table >
-                                    <tbody>
-                                      <tr>
-                                        <td>{data.time}</td>
-                                        <td>{data.accountNumber}</td>
-                                        <td>{data.amount}</td>
-                                        <td>
-                                          <button
-                                            type="button"
-                                            className="btn btn-success"
-                                            data-toggle="collapse"
-                                            data-target={"#" + data.transId}
-                                            aria-expanded="false"
-                                            aria-controls={data.transId}
-                                            onClick={this.handleMoreBtn}
-                                          >
-                                            <i className="fas fa-plus fa-1x" />
-                                          </button>
-                                        </td>
-                                      </tr>
-                                      <tr
-                                        className="collapse multi-collapse"
-                                        id={data.transId}
-                                      >
-                                        <td className="user-history-table-custom">
-                                          <table>
-                                            <tbody>
-                                              <tr>
-                                                <th scope="col" className="user-history-table-th">Chi tiết</th>
-                                                <th scope="col" className="user-history-table-th">Nội dung</th>
-                                              </tr>
-                                              <tr key={index} className="">
-                                                <td>{data.status}</td>
-                                                <td>{data.note}</td>
-                                              </tr>
-                                            </tbody>
-                                          </table>
-                                        </td>
-                                      </tr>
-                                    </tbody>
-                                  </table>
-                                </td>
-                              </tr>
-                            );
-                          })
+                          return (
+                            <tr key={index} className="user-history-table-border">
+                              <td className="user-history-table-custom">
+                                <table >
+                                  <tbody>
+                                    <tr>
+                                      <td>{data.time}</td>
+                                      <td>{data.accountNumber}</td>
+                                      <td>{data.amount}</td>
+                                      <td>
+                                        <button
+                                          type="button"
+                                          className="btn btn-success"
+                                          data-toggle="collapse"
+                                          data-target={"#" + data.transId}
+                                          aria-expanded="false"
+                                          aria-controls={data.transId}
+                                          onClick={this.handleMoreBtn}
+                                        >
+                                          <i className="fas fa-plus fa-1x" />
+                                        </button>
+                                      </td>
+                                    </tr>
+                                    <tr
+                                      className="collapse multi-collapse"
+                                      id={data.transId}
+                                    >
+                                      <td className="user-history-table-custom">
+                                        <table>
+                                          <tbody>
+                                            <tr>
+                                              <th scope="col" className="user-history-table-th">Chi tiết</th>
+                                              <th scope="col" className="user-history-table-th">Nội dung</th>
+                                            </tr>
+                                            <tr key={index} className="">
+                                              <td>{data.status}</td>
+                                              <td>{data.note}</td>
+                                            </tr>
+                                          </tbody>
+                                        </table>
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </td>
+                            </tr>
+                          );
+                        })
                         : null}
                     </tbody>
                   </table>
@@ -235,7 +273,6 @@ class UserHistory extends Component {
             </div>
           </form>
         </div>
-        {console.log(this.props.userHistory)}
       </div>
     );
   }

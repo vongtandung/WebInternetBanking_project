@@ -2,10 +2,16 @@ import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import "./HeaderStaff.css";
 import logo from "../../../assets/images/pic/bank-logo.png";
+import WebService from "../../../utilities/WebServices";
 
 class HeaderStaff extends Component {
   constructor(props) {
     super(props);
+    this.webService = new WebService();
+  }
+  handleLogoutStaff = () =>{
+    this.webService.logout();
+    this.props.history.push("/");
   }
   render() {
     return (
@@ -54,7 +60,7 @@ class HeaderStaff extends Component {
                   href="#"
                   data-toggle="modal"
                   data-target="#logoutModal"
-                  onClick={this.logOut}
+                  onClick={this.handleLogoutStaff}
                 >
                   Đăng xuất
                 </button>

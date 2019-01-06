@@ -2,11 +2,10 @@ import {
     FETCH_BEGIN,
     FETCH_SUCCESS,
     FETCH_FAILURE,
-    FETCH_INIT
 } from "../actions/types";
 
 const initState = {
-    accTransList: [],
+    data: null,
     loading: false,
     return_code: null,
     return_mess: "",
@@ -31,7 +30,7 @@ export default function (state = initState, action) {
                 loading: false,
                 return_code: action.payload.response.return_code,
                 return_mess: action.payload.response.return_mess,
-                accTransList: action.payload.response.data,
+                data: action.payload.response.data,
             };
 
         case FETCH_FAILURE:
@@ -46,15 +45,7 @@ export default function (state = initState, action) {
             return state = {
                 loading: false,
                 error: true,
-                accTransList: []
-            };
-        case FETCH_INIT:
-            return state = {
-                accTransList: [],
-                loading: false,
-                return_code: null,
-                return_mess: "",
-                error: false
+                data: null
             };
         default:
             // ALWAYS have a default case in a reducer

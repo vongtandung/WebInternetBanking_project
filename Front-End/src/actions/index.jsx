@@ -61,4 +61,20 @@ export const fetchUserTransData = (accNumId) => {
   };
 };
 
+export const fetchInitUserTransData = () => ({
+  type: actionTypes.FETCH_INIT
+});
 
+
+export const fetchUserByPhoneData = (phone) => {
+  return dispatch => {
+    dispatch(fetchBegin());
+    apiFunc.handdleGetInfoByPhone(phone).then(res => {
+      if (res.error === false) {
+        dispatch(fetchSuccess(res.response));
+      } else if (res.error === true) {
+        dispatch(fetchFailure(res.error));
+      }
+    });
+  };
+};

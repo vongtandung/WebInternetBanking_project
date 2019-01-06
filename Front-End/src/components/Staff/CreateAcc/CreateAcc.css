@@ -19,3 +19,15 @@
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
 }
+
+.staff-create-body{
+    padding: 1em 1em 0em 1em;
+    color: darkred;
+    text-align: left;
+    font-weight: bold;
+}
+
+.staff-create-footer{
+    padding-top: 0;
+    padding-bottom: 0!important;
+}

@@ -1,8 +1,9 @@
 import React, { Component } from "react";
-import { NavLink, Route, Switch } from "react-router-dom";
+import { NavLink, Route, Switch, Redirect } from "react-router-dom";
 import "./Staff.css";
 import HeaderStaff from "./HeaderStaff";
 import CreateAcc from "./CreateAcc";
+import ManageAcc from "./ManageAcc";
 
 class Staff extends Component {
   componentWillMount() {
@@ -32,7 +33,7 @@ class Staff extends Component {
                     </div>
                   </NavLink>
                   <NavLink
-                    to="/staff/user-manager"
+                    to="/staff/manage"
                     className="nav-link-custom"
                     activeClassName="nav-link-custom-active"
                   >
@@ -52,7 +53,9 @@ class Staff extends Component {
           <div id="content-wrapper">
             <div className="content-wrapper-box">
               <Switch>
-                <Route path="/staff/create" component={CreateAcc} />
+                <Route exact path="/staff/create" component={CreateAcc} />
+                <Route exact path="/staff/manage" component={ManageAcc} />
+                <Route exact render={() => <Redirect to="/staff/create" />} />
               </Switch>
             </div>
           </div>

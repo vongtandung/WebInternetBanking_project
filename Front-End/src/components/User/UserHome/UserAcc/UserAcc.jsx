@@ -45,32 +45,50 @@ class UserAcc extends Component {
   handleRoute = value => {
     this.props.isRoute(value);
   };
-  handleDelPaymentAccApi = accountNumber => {
-    this.webService.delAccPayment(accountNumber)
-    .then (res => {
-      if (res.return_code === 1){
-        this.props.showPopup("Đóng tài khoản thành công", "", "success");
-      } else if (res.return_code === -1){
-        this.props.showPopup("Đóng tài khoản thất bại", "", "error");
-      }
-    })
-  } 
+  handleDelPaymentAccApi = (accountNumber, reciveAccount) => {
+    this.webService.delAccPayment(accountNumber, reciveAccount)
+      .then(res => {
+        if (res.return_code === 1) {
+          this.props.showPopup("Đóng tài khoản thành công", "", "success");
+          this.refs.accDesId.disabled = true;
+          this.refs.btnExchange.disabled = true;
+          this.props.fetchUserAccData();
+        } else if (res.return_code === -1) {
+          this.props.showPopup("Đóng tài khoản thất bại", "", "error");
+        }
+      }).catch((error) => {
+        if (error === 401) {
+          this.webService.renewToken()
+            .then(res => {
+              this.webService.updateToken(res.access_token)
+              this.handleDelPaymentAccApi(accountNumber, reciveAccount)
+            }).catch((error) => {
+              this.webService.logout();
+              this.props.history.push('/login')
+            })
+        } else if (error === 403) {
+          this.webService.logout()
+          this.props.push('/login')
+          return
+        }
+      });
+  }
   handleFilterAccClose = accountNumSel => {
     let accDesList = [...this.props.userAcc.data];
     accDesList = accDesList.filter((data, index) => {
       return data.accountNumber !== accountNumSel;
     });
-    this.setState({ accDesList: accDesList });
+    this.setState({ accDesList: accDesList, accDesSel: accDesList[0].accountNumber });
   };
   handleFormCloseChange = (e) => {
-    if (e.target.value <=50000){
+    if (e.target.value <= 50000 || this.props.userAcc.data.length <= 1) {
       this.setState({ modalOpen: false });
     } else {
       this.setState({ modalOpen: true });
     }
   };
   handleFormExchangeChange = (e) => {
-    this.setState({accDesSel: e.target.value});
+    this.setState({ accDesSel: e.target.value });
   };
   handleFormCloseAccSubmit = e => {
     e.preventDefault();
@@ -78,18 +96,20 @@ class UserAcc extends Component {
     let accountNumSel = e.nativeEvent.target.accCloseId[accountNumSelInd].text;
     if (e.target.accCloseId.value === "") {
       this.props.showPopup("Vui lòng chọn số tài khoản", "", "error");
+    } else if (this.props.userAcc.data.length <= 1) {
+      this.props.showPopup("Bạn cần duy trì ít nhất 1 tài khoản", "", "error");
     } else {
-      this.handleFilterAccClose(accountNumSel);
       this.refs.accCloseSrcEdit.value = accountNumSel;
       if (e.target.accCloseId.value <= 50000) {
-        this.handleDelPaymentAccApi(accountNumSel)
+        this.handleDelPaymentAccApi(accountNumSel, "")
       } else {
-        this.setState({accDesSel:accountNumSel});
+        this.handleFilterAccClose(accountNumSel);
       }
     }
   };
-  teston= () =>{
-    console.log("ok")
+  handleCloseFormEditSubmit = e => {
+    e.preventDefault();
+    this.handleDelPaymentAccApi(this.refs.accCloseSrcEdit.value, this.state.accDesSel);
   }
 
   render() {
@@ -136,16 +156,16 @@ class UserAcc extends Component {
                       </option>
                       {return_code === 1 && data && data.length > 0
                         ? data.map((data, index) => {
-                            return (
-                              <option
-                                id={data.accountNumber}
-                                key={index}
-                                value={data.balance}
-                              >
-                                {data.accountNumber}
-                              </option>
-                            );
-                          })
+                          return (
+                            <option
+                              id={data.accountNumber}
+                              key={index}
+                              value={data.balance}
+                            >
+                              {data.accountNumber}
+                            </option>
+                          );
+                        })
                         : null}
                     </select>
                   </div>
@@ -161,13 +181,13 @@ class UserAcc extends Component {
                       Đóng tài khoản
                     </button>
                   ) : (
-                    <button
-                      type="submit"
-                      className="btn btn-acc"
-                    >
-                      Đóng tài khoản
+                      <button
+                        type="submit"
+                        className="btn btn-acc"
+                      >
+                        Đóng tài khoản
                     </button>
-                  )}
+                    )}
                 </div>
               </div>
             </div>
@@ -182,21 +202,25 @@ class UserAcc extends Component {
             role="dialog"
             aria-labelledby="ModalEdit"
             aria-hidden="true"
+            data-backdrop="true"
           >
             <div className="modal-dialog modal-dialog-centered" role="document">
               <div className="modal-content">
                 <div className="modal-header">
                   <h5 className="modal-title" id="exampleModalLongTitle">
-                    Cập nhật liên hệ
+                    Cập nhật tài khoản
                   </h5>
                 </div>
                 <div className="modal-body">
                   <div className="user-contact-edit">
                     <form
                       id="contact-edit-form"
-                      onSubmit={this.handleContactFormEditSubmit}
+                      onSubmit={this.handleCloseFormEditSubmit}
                     >
                       <div className="form-group form-user-inf">
+                        <div className="notice" style={{ "color": "red" }}>
+                          *Bạn vui lòng chuyển số dư khả dụng sang một tài khoản khác
+                        </div>
                         <div className="form-block user-contact-edit-block">
                           <label
                             htmlFor="accCloseSrcEdit"
@@ -231,16 +255,16 @@ class UserAcc extends Component {
                             >
                               {accDesList.length > 0
                                 ? accDesList.map((data, index) => {
-                                    return (
-                                      <option
-                                        id={data.accountNumber}
-                                        key={index}
-                                        value={data.balance}
-                                      >
-                                        {data.accountNumber}
-                                      </option>
-                                    );
-                                  })
+                                  return (
+                                    <option
+                                      id={data.accountNumber}
+                                      key={index}
+                                      value={data.accountNumber}
+                                    >
+                                      {data.accountNumber}
+                                    </option>
+                                  );
+                                })
                                 : null}
                             </select>
                           </div>
@@ -254,11 +278,11 @@ class UserAcc extends Component {
                     type="button"
                     className="btn btn-secondary"
                     data-dismiss="modal"
-                    onClick={this.teston}
                   >
                     Đóng
                   </button>
                   <button
+                    ref="btnExchange"
                     form="contact-edit-form"
                     type="submit"
                     className="btn btn-acc"

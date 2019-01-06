@@ -3,7 +3,7 @@ import decode from "jwt-decode";
 export default class WebService {
   // Initializing important variables
   constructor(domain) {
-    this.apiDomain = domain || "http://localhost:3001/api"; // API server domain
+    this.apiDomain = domain || "http://172.16.7.234:3001/api"; // API server domain
     this.fetchDataApi = this.fetchDataApi.bind(this); // React binding stuff
   }
 
@@ -23,7 +23,6 @@ export default class WebService {
       json: true,
       body: JSON.stringify(param)
     }).then(res => {
-      console.log(res);
       return res;
     });
   }
@@ -36,7 +35,6 @@ export default class WebService {
       json: true,
       body: JSON.stringify(param)
     }).then(res => {
-      console.log(res);
       return res;
     });
   }
@@ -52,7 +50,6 @@ export default class WebService {
       json: true,
       body: JSON.stringify(param)
     }).then(res => {
-      console.log(res);
       return res;
     });
   }
@@ -69,7 +66,6 @@ export default class WebService {
         body: JSON.stringify(param)
       }
     ).then(res => {
-      console.log(res);
       return res;
     });
   }
@@ -86,7 +82,6 @@ export default class WebService {
       json: true,
       body: JSON.stringify(param)
     }).then(res => {
-      console.log(res);
       return res;
     });
   }
@@ -108,7 +103,6 @@ export default class WebService {
       json: true,
       body: JSON.stringify(param)
     }).then(res => {
-      console.log(res);
       return res;
     });
   }
@@ -123,7 +117,6 @@ export default class WebService {
       json: true,
       body: JSON.stringify(param)
     }).then(res => {
-      console.log(res);
       return res;
     });
   }
@@ -138,12 +131,14 @@ export default class WebService {
       json: true,
       body: JSON.stringify(param)
     }).then(res => {
-      console.log(res);
       return res;
     });
   }
 
   setAccContact(accountNumber, name, fullName) {
+    if (name === "") {
+      name = fullName
+    }
     const param = {
       userId: this.getIdUser(),
       accountNumber: accountNumber,
@@ -156,7 +151,6 @@ export default class WebService {
       json: true,
       body: JSON.stringify(param)
     }).then(res => {
-      console.log(res);
       return res;
     });
   }
@@ -172,15 +166,15 @@ export default class WebService {
       json: true,
       body: JSON.stringify(param)
     }).then(res => {
-      console.log(res);
       return res;
     });
   }
 
-  delAccPayment(accountNumber) {
+  delAccPayment(accountNumber, reciveAccount) {
     const param = {
       userId: this.getIdUser(),
-      accountNumber: accountNumber
+      accountNumber: accountNumber,
+      reciveAccount: reciveAccount
     };
     // Get a token from api server using the fetch api
     return this.fetchDataApi(`${this.apiDomain}/banking/deletepaymentaccount`, {
@@ -188,10 +182,56 @@ export default class WebService {
       json: true,
       body: JSON.stringify(param)
     }).then(res => {
-      console.log(res);
       return res;
     });
   }
+
+  //FOR STAFF
+  //#URl: /employee
+  createAcc(userName, passWord,  name, email, phone) {
+    const param = {
+      userName: userName,
+      passWord: passWord,
+      name: name,
+      email: email,
+      phone: phone
+    };
+    return this.fetchDataApi(`${this.apiDomain}/employee/createaccount`, {
+      method: "POST",
+      json: true,
+      body: JSON.stringify(param)
+    }).then(res => {
+      return res; 
+    });
+  }
+
+  createAccPay(userId){
+    const param = {
+      userId: userId
+    };
+    return this.fetchDataApi(`${this.apiDomain}/employee/createpaymentaccount`, {
+      method: "POST",
+      json: true,
+      body: JSON.stringify(param)
+    }).then(res => {
+      return res; 
+    });
+  }
+  
+  getAccInfoByPhone(phone){
+    const param = {
+      phone: phone
+    };
+    return this.fetchDataApi(`${this.apiDomain}/employee/getaccountinfobyphone`, {
+      method: "POST",
+      json: true,
+      body: JSON.stringify(param)
+    }).then(res => {
+      return res; 
+    });
+  }
+
+
 
   ///////////////////////////////////////////////          OTHER FUNCTION          //////////////////////////////////////////////////////
   //Function Authen from login -----------------------------------------
@@ -205,6 +245,12 @@ export default class WebService {
   }
   isAdmin() {
     return this.loggedIn() && this.getPermission() === "1";
+  }
+  isUserPermiss() {
+    return this.getPermission() === "0";
+  }
+  isAdminPermiss() {
+    return this.getPermission() === "1";
   }
   isTokenExpired(token) {
     try {

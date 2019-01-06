@@ -1,0 +1,30 @@
+.navbar-manage{
+    justify-content: center;
+    background: white;
+}
+
+.navbar-manage .nav-item{
+    font-weight: bold;
+}
+
+.tab-content>.active {
+    width: 100%;
+}
+
+.tab-content-manage{
+    width: 100%;
+    background: white;
+    box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.3);
+    min-height: calc(100vh - 200px);
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+
+
+.staff-manage-accpay .form-user-inf{
+    width:100%;
+    border: none;
+    padding:0;
+}

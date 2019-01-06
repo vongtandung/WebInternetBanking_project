@@ -14,6 +14,39 @@ export default class SystemHelper {
       mess: mess
     })
   }
+  validateRegister(username, password, rePassword, name, email, phone) {
+    let mess = "";
+    let isValid = true;
+    if (this.checkEmty(username)) {
+      isValid = false;
+      mess = "Bạn chưa nhập tên tài khoản"
+    } else if (this.checkEmty(password)) {
+      isValid = false;
+      mess = "Bạn chưa nhập password"
+    } else if (this.checkEmty(rePassword)) {
+      isValid = false;
+      mess = "Bạn chưa nhập xác nhận password"
+    } else if (this.checkEmty(name)) {
+      isValid = false;
+      mess = "Bạn chưa nhập họ tên"
+    } else if (this.checkEmty(email)) {
+      isValid = false;
+      mess = "Bạn chưa nhập email"
+    } else if (this.checkEmty(phone)) {
+      isValid = false;
+      mess = "Bạn chưa nhập số điện thoại"
+    } else if (password !== rePassword) {
+      isValid = false;
+      mess = "Password bạn nhập không khớp"
+    } else if (this.checkPhone(phone) === false){
+      isValid = false;
+      mess = "Số điện thoại phải có 10 chữ số"
+    }
+    return ({
+      isValid: isValid,
+      mess: mess
+    })
+  }
   validateSendMoney(accRecExist, accPayBalance, accMoneySend, accInfoSend) {
     let mess = "";
     let isValid = true;
@@ -26,7 +59,7 @@ export default class SystemHelper {
     } else if (accMoneySend === undefined || accMoneySend < 50000) {
       isValid = false;
       mess = "Số tiền gửi phải từ 50,000 VNĐ"
-    } else if ((accMoneySend > accPayBalance && (accPayBalance - accMoneySend) < 50000) || accPayBalance< accMoneySend) {
+    } else if ((accMoneySend > accPayBalance && (accPayBalance - accMoneySend) < 50000) || accPayBalance < accMoneySend) {
       isValid = false;
       mess = "Số dư tài khoản không đủ"
     }
@@ -34,6 +67,15 @@ export default class SystemHelper {
       isValid: isValid,
       mess: mess
     })
+  }
+  checkPhone(value) {
+    /* reg exp để kiểm tra xem chuỗi có chỉ bao gồm 10 - 11 chữ số hay không */
+    const regexp = /^\d{10,11}$/;
+    const checkingResult = regexp.exec(value);
+    if (checkingResult !== null) {
+      return true
+    }
+      return false
   }
   checkEmty(value) {
     if (value == null || value === '') {

@@ -35,7 +35,7 @@ class Login extends Component {
   handleFormLoginSubmit = (e) => {
     e.preventDefault();
     const validate = this.helper.validateLogin(e.target.username.value, e.target.password.value, this.state.recapValue)
-    if (validate.isValid === false) {
+    if (validate.isValid === true) {
       this.props.showPopup(validate.mess, "", "error");
     } else {
       this.webService.login(e.target.username.value, e.target.password.value)
@@ -54,6 +54,9 @@ class Login extends Component {
             );
             if (this.webService.isUser()) {
               this.props.history.push("/user");
+            }
+            if (this.webService.isAdmin()) {
+              this.props.history.push("/staff");
             }
           }
           else if (res.return_code === -1) {
