@@ -55,6 +55,7 @@ class UserAcc extends Component {
             this.refs.btnExchange.disabled = true;
           }
           this.props.showPopup("Đóng tài khoản thành công", "", "success");
+          this.setState({accBalance: null});
           setTimeout(() => {
             this.props.fetchUserAccData();
           }, 100);
@@ -92,7 +93,7 @@ class UserAcc extends Component {
     });
   };
   handleFormCloseChange = e => {
-    this.setState({accBalance: e.target.value});
+    this.setState({ accBalance: e.target.value });
     if (e.target.value <= 50000 || this.props.userAcc.data.length <= 1) {
       this.setState({ modalOpen: false });
     } else {
@@ -127,9 +128,16 @@ class UserAcc extends Component {
     );
   };
 
+  handleCloseFormEdit = e => {
+    e.preventDefault();
+    this.setState({ modalOpen: false });
+    this.refs.accDesId.disabled = false;
+    this.refs.btnExchange.disabled = false;
+  };
+
   render() {
     const { data, return_code } = this.props.userAcc;
-    const accBalance= this.state.accBalance;
+    const accBalance = this.state.accBalance;
     const accDesList = this.state.accDesList;
     const modalOpen = this.state.modalOpen;
     return (
@@ -228,7 +236,8 @@ class UserAcc extends Component {
             role="dialog"
             aria-labelledby="ModalEdit"
             aria-hidden="true"
-            data-backdrop="true"
+            data-backdrop="static"
+            data-keyboard="false"
           >
             <div className="modal-dialog modal-dialog-centered" role="document">
               <div className="modal-content">
@@ -305,6 +314,7 @@ class UserAcc extends Component {
                     type="button"
                     className="btn btn-secondary"
                     data-dismiss="modal"
+                    onClick={this.handleCloseFormEdit}
                   >
                     Đóng
                   </button>
