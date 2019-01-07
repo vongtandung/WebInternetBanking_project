@@ -55,7 +55,7 @@ class UserAcc extends Component {
             this.refs.btnExchange.disabled = true;
           }
           this.props.showPopup("Đóng tài khoản thành công", "", "success");
-          this.setState({accBalance: null});
+          this.setState({ accBalance: null });
           setTimeout(() => {
             this.props.fetchUserAccData();
           }, 100);
@@ -130,7 +130,9 @@ class UserAcc extends Component {
 
   handleCloseFormEdit = e => {
     e.preventDefault();
-    this.setState({ modalOpen: false });
+    if (this.refs.btnExchange.disabled === true) {
+      this.setState({ modalOpen: false });
+    }
     this.refs.accDesId.disabled = false;
     this.refs.btnExchange.disabled = false;
   };
