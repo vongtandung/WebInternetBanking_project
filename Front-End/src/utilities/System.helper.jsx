@@ -61,7 +61,7 @@ export default class SystemHelper {
       mess = "Số tiền gửi phải từ 50,000 VNĐ"
     } else if ((accMoneySend > accPayBalance && (accPayBalance - accMoneySend) < 50000) || accPayBalance < accMoneySend) {
       isValid = false;
-      mess = "Số dư tài khoản không đủ"
+      mess = "Số dư khả dụng tài khoản không đủ"
     }
     return ({
       isValid: isValid,

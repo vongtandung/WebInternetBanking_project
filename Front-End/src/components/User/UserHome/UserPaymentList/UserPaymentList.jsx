@@ -144,7 +144,7 @@ class UserPaymentList extends Component {
                   </label>
                   <div className="col-form-input-accpay-custom col-form-input-readonly">
                     <label className="col-form-label col-form-label-lg ">
-                      {accPaySel} &#8363;
+                      {accPaySel - 50000 < 0 ? 0 : accPaySel - 50000} &#8363;
                     </label>
                   </div>
                 </div>

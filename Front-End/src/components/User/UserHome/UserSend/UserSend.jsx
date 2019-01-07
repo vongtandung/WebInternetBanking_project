@@ -168,16 +168,12 @@ class UserSend extends Component {
   };
   handleAddContactApi = (accountNumber, name, fullName) => {
     const self = this;
-    self
-      .setState({ accOtpReq: true }, () => {
-        self.webService.setAccContact(accountNumber).then(res => {
+        self.webService.setAccContact(accountNumber, name, fullName).then(res => {
           if (res.return_code === 1) {
           } else if (res.return_code === -1) {
             self.props.showPopup("Error", "", "error");
           }
-        });
-      })
-      .catch(error => {
+        }).catch(error => {
         if (error === 401) {
           self.webService
             .renewToken()
@@ -412,7 +408,7 @@ class UserSend extends Component {
                     htmlFor="accAmount"
                     className="col-form-label col-form-label-lg col-form-label-custom"
                   >
-                    Số dư khả dụng
+                    Số dư hiện tại
                   </label>
                   <div className="col-form-input-custom col-form-input-readonly">
                     <label className="col-form-label col-form-label-lg">
